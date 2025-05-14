@@ -22,7 +22,11 @@ import {
   EyeOff,
   Shield,
   Globe,
-  Zap
+  Zap,
+  LayoutDashboard,
+  Send,
+  Tag,
+  ExternalLink
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -51,7 +55,8 @@ const Dashboard: React.FC = () => {
       category: 'Development',
       status: 'active',
       usageCount: 156,
-      lastUsed: '2 hours ago'
+      lastUsed: '2 hours ago',
+      isListed: true
     },
     {
       id: '2',
@@ -61,7 +66,8 @@ const Dashboard: React.FC = () => {
       category: 'Data Science',
       status: 'active',
       usageCount: 89,
-      lastUsed: '1 day ago'
+      lastUsed: '1 day ago',
+      isListed: false
     },
     {
       id: '3',
@@ -71,7 +77,8 @@ const Dashboard: React.FC = () => {
       category: 'Content',
       status: 'inactive',
       usageCount: 42,
-      lastUsed: '2 weeks ago'
+      lastUsed: '2 weeks ago',
+      isListed: false
     }
   ];
 
@@ -164,7 +171,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent flex items-center">
+        <LayoutDashboard className="h-8 w-8 mr-3 text-primary-400" />
         Dashboard
       </h1>
 
@@ -375,7 +383,15 @@ const Dashboard: React.FC = () => {
                     className="w-16 h-16 rounded-lg bg-gray-700"
                   />
                   <div>
-                    <h3 className="font-semibold text-white">{agent.name}</h3>
+                    <div className="flex items-center">
+                      <h3 className="font-semibold text-white">{agent.name}</h3>
+                      {agent.isListed && (
+                        <span className="ml-2 bg-primary-900 text-primary-300 text-xs px-2 py-0.5 rounded-full flex items-center">
+                          <Tag className="h-3 w-3 mr-1" />
+                          Listed
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-400">{agent.category}</p>
                     <div className="flex items-center mt-1">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs ${
@@ -413,14 +429,36 @@ const Dashboard: React.FC = () => {
                     <Zap className="h-4 w-4 mr-1" />
                     Use Agent
                   </motion.button>
-                  <motion.button 
-                    className="text-gray-400 text-sm flex items-center"
-                    whileHover={{ scale: 1.05, color: '#fff' }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Settings
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </motion.button>
+                  <div className="flex space-x-3">
+                    <motion.button 
+                      className="text-gray-400 text-sm flex items-center"
+                      whileHover={{ scale: 1.05, color: '#fff' }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Send className="h-4 w-4 mr-1" />
+                      Transfer
+                    </motion.button>
+                    {!agent.isListed && (
+                      <motion.button 
+                        className="text-gray-400 text-sm flex items-center"
+                        whileHover={{ scale: 1.05, color: '#fff' }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Tag className="h-4 w-4 mr-1" />
+                        List
+                      </motion.button>
+                    )}
+                    {agent.isListed && (
+                      <motion.button 
+                        className="text-gray-400 text-sm flex items-center"
+                        whileHover={{ scale: 1.05, color: '#fff' }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-1" />
+                        View
+                      </motion.button>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -616,7 +654,6 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-start">
                     <Bell className="h-5 w-5 text-primary-400 mt-0.5 mr-3" />
                     <div>
-                      <p className="font-medium">Agent Updates</p>
                       <p className="text-sm text-gray-400">Get notified about agent updates and new features</p>
                     </div>
                   </div>
