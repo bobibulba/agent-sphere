@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import AgentDetail from './pages/AgentDetail';
 import Search from './pages/Search';
+import Dashboard from './pages/Dashboard';
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/agent/:id" element={<AgentDetail />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
         <Footer />
