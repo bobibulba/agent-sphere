@@ -26,7 +26,12 @@ import {
   LayoutDashboard,
   Send,
   Tag,
-  ExternalLink
+  ExternalLink,
+  Plus,
+  CreditCard,
+  DollarSign,
+  Bitcoin,
+  Coins
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -359,14 +364,24 @@ const Dashboard: React.FC = () => {
         >
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">My Agents</h2>
-            <motion.button 
-              className="bg-primary-500 text-white px-4 py-2 rounded-lg flex items-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Bot className="h-4 w-4 mr-2" />
-              Browse More Agents
-            </motion.button>
+            <div className="flex space-x-3">
+              <motion.button 
+                className="bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center"
+                whileHover={{ scale: 1.05, backgroundColor: '#374151' }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Agent
+              </motion.button>
+              <motion.button 
+                className="bg-primary-500 text-white px-4 py-2 rounded-lg flex items-center"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Bot className="h-4 w-4 mr-2" />
+                Browse More Agents
+              </motion.button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -582,7 +597,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="border-t border-gray-700 p-3 bg-gray-850 flex justify-between">
+                <div className="border-t border-gray-700 p-3 bg-gray-850 flex justify-end">
                   <motion.button 
                     className="text-primary-400 text-sm flex items-center"
                     whileHover={{ scale: 1.05 }}
@@ -590,14 +605,6 @@ const Dashboard: React.FC = () => {
                   >
                     <Edit className="h-4 w-4 mr-1" />
                     Edit Listing
-                  </motion.button>
-                  <motion.button 
-                    className="text-gray-400 text-sm flex items-center"
-                    whileHover={{ scale: 1.05, color: '#fff' }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    View Analytics
-                    <ChevronRight className="h-4 w-4 ml-1" />
                   </motion.button>
                 </div>
               </motion.div>
@@ -654,6 +661,7 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-start">
                     <Bell className="h-5 w-5 text-primary-400 mt-0.5 mr-3" />
                     <div>
+                      <p className="font-medium">Agent Updates</p>
                       <p className="text-sm text-gray-400">Get notified about agent updates and new features</p>
                     </div>
                   </div>
@@ -675,6 +683,42 @@ const Dashboard: React.FC = () => {
                     <input type="checkbox" value="" className="sr-only peer" />
                     <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
                   </label>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border-t border-gray-700 pt-6">
+              <h3 className="text-lg font-medium mb-4">Currency & Payment</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start">
+                    <Coins className="h-5 w-5 text-primary-400 mt-0.5 mr-3" />
+                    <div>
+                      <p className="font-medium">Preferred Currency</p>
+                      <p className="text-sm text-gray-400">Select your default currency for transactions</p>
+                    </div>
+                  </div>
+                  <select className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option>ETH</option>
+                    <option>BNB</option>
+                    <option>USDT</option>
+                    <option>USDC</option>
+                  </select>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start">
+                    <CreditCard className="h-5 w-5 text-primary-400 mt-0.5 mr-3" />
+                    <div>
+                      <p className="font-medium">Payment Method</p>
+                      <p className="text-sm text-gray-400">Choose your preferred payment method</p>
+                    </div>
+                  </div>
+                  <select className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option>Crypto Wallet</option>
+                    <option>Credit Card</option>
+                    <option>PayPal</option>
+                  </select>
                 </div>
               </div>
             </div>
