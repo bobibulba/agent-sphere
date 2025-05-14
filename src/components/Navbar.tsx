@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Bot, Menu, X, Search, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User } from 'lucide-react';
+import { Bot, Menu, X, Search, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User, LayoutDashboard, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false); // Demo state for signed in/out
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const navItemVariants = {
     initial: { y: -5, opacity: 0 },
@@ -41,8 +43,50 @@ const Navbar: React.FC = () => {
     exit: { opacity: 0 }
   };
 
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { 
+        type: "spring",
+        stiffness: 400,
+        damping: 25
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      scale: 0.95,
+      transition: { duration: 0.2 }
+    }
+  };
+
   const toggleSignInState = () => {
     setIsSignedIn(!isSignedIn);
+    if (isProfileMenuOpen) {
+      setIsProfileMenuOpen(false);
+    }
+  };
+
+  // Close profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    setIsSignedIn(false);
+    setIsProfileMenuOpen(false);
   };
 
   return (
@@ -120,15 +164,50 @@ const Navbar: React.FC = () => {
             </div>
             
             {isSignedIn ? (
-              <motion.div
-                className="relative"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <button className="bg-gradient-to-r from-primary-500 to-secondary-500 p-2 rounded-full">
+              <div className="relative" ref={profileMenuRef}>
+                <motion.button
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className="bg-gradient-to-r from-primary-500 to-secondary-500 p-2 rounded-full"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <User className="h-5 w-5 text-white" />
-                </button>
-              </motion.div>
+                </motion.button>
+                
+                <AnimatePresence>
+                  {isProfileMenuOpen && (
+                    <motion.div
+                      className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-700"
+                      variants={dropdownVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                    >
+                      <div className="px-4 py-2 border-b border-gray-700">
+                        <p className="text-sm font-medium text-white">Demo User</p>
+                        <p className="text-xs text-gray-400">user@example.com</p>
+                      </div>
+                      
+                      <Link 
+                        to="/dashboard" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        <LayoutDashboard className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </Link>
+                      
+                      <button 
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sign Out
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
               <motion.button 
                 onClick={() => setIsSignInModalOpen(true)}
@@ -202,14 +281,32 @@ const Navbar: React.FC = () => {
               </div>
               
               {isSignedIn ? (
-                <div className="flex items-center space-x-2 bg-gray-800 p-3 rounded-lg">
-                  <div className="bg-gradient-to-r from-primary-500 to-secondary-500 p-2 rounded-full">
-                    <User className="h-5 w-5 text-white" />
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center space-x-2 bg-gray-800 p-3 rounded-lg">
+                    <div className="bg-gradient-to-r from-primary-500 to-secondary-500 p-2 rounded-full">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Demo User</p>
+                      <p className="text-xs text-gray-400">user@example.com</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">Demo User</p>
-                    <p className="text-xs text-gray-400">user@example.com</p>
-                  </div>
+                  
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center px-4 py-2 text-sm text-gray-300 bg-gray-800 rounded-lg hover:bg-gray-700 hover:text-white transition"
+                  >
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    Dashboard
+                  </Link>
+                  
+                  <button 
+                    className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-300 bg-gray-800 rounded-lg hover:bg-gray-700 hover:text-white transition"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </button>
                 </div>
               ) : (
                 <button 
