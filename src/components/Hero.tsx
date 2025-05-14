@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Bot, Zap, Shield, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Hero: React.FC = () => {
   return (
@@ -203,9 +204,20 @@ const FeaturedAgentCarousel: React.FC = () => {
               <div className="text-xl font-bold text-white">{agent.price}</div>
             </div>
             
-            <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
-              View Details
-            </button>
+            <div className="flex space-x-3">
+              <button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+                View Details
+              </button>
+              
+              <Link to="/featured" className="flex items-center justify-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+                <ArrowRight className="h-4 w-4" />
+                <span className="sr-only">Explore All</span>
+              </Link>
+            </div>
+            
+            <Link to="/featured" className="block text-center text-blue-400 hover:text-blue-300 text-sm mt-2">
+              Explore all featured agents
+            </Link>
           </motion.div>
           
           {/* Carousel navigation dots */}

@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Bot, Repeat, Wallet, Code } from 'lucide-react';
+import { Bot, Wallet, Code } from 'lucide-react';
 
 const HowItWorks: React.FC = () => {
   const steps = [
     {
       icon: <Wallet className="h-8 w-8" />,
-      title: 'Connect Wallet',
-      description: 'Connect your crypto wallet to access the NFA Exchange platform securely.'
+      title: 'Connect Account',
+      description: 'Sign in with your preferred method to access the AgentSphere platform securely.'
     },
     {
       icon: <Bot className="h-8 w-8" />,
@@ -15,14 +15,9 @@ const HowItWorks: React.FC = () => {
       description: 'Explore our marketplace of unique AI agents with various capabilities and use cases.'
     },
     {
-      icon: <Repeat className="h-8 w-8" />,
-      title: 'Swap or Pool',
-      description: 'Trade agents directly or provide liquidity to earn rewards from transaction fees.'
-    },
-    {
       icon: <Code className="h-8 w-8" />,
-      title: 'Create & Deploy',
-      description: 'Build your own AI agents using ChatAndBuild and list them on the marketplace.'
+      title: 'Remix or Use',
+      description: 'Use agents directly or remix them to create your own customized AI solutions.'
     }
   ];
 
@@ -32,11 +27,11 @@ const HowItWorks: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-white mb-4">How It Works</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            NFA Exchange makes it easy to discover, trade, and create Non-Fungible Agents in a few simple steps.
+            AgentSphere makes it easy to discover, use, and create AI agents in a few simple steps.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -47,7 +42,7 @@ const HowItWorks: React.FC = () => {
             >
               {/* Connecting line */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 transform -translate-x-1/2 z-0"></div>
+                <div className="hidden md:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 transform -translate-x-1/2 z-0"></div>
               )}
               
               <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 relative z-10 h-full">

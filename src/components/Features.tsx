@@ -40,7 +40,7 @@ const Features: React.FC = () => {
     <section className="py-20 bg-gray-900">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-white mb-4">Why Choose NFA Exchange</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Why Choose AgentSphere</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
             Our platform offers unique advantages for both users and creators of Non-Fungible Agents.
           </p>

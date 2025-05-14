@@ -1,31 +1,28 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import AgentDetail from './pages/AgentDetail';
 import Search from './pages/Search';
-import './index.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/agent/:id" element={<AgentDetail />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/category/:category" element={<Search />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+      <div className="min-h-screen bg-gray-900 text-white">
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/agent/:id" element={<AgentDetail />} />
+            <Route path="/search" element={<Search />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

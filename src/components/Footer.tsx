@@ -1,114 +1,87 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bot, Twitter, Github, Linkedin, Mail, Sparkles, Users } from 'lucide-react';
+import { Twitter, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
 
 const Footer: React.FC = () => {
-  const { theme } = useTheme();
-  
   return (
-    <footer className="bg-gray-900 dark:bg-gray-900 light:bg-gray-100 text-white dark:text-white light:text-gray-900 pt-16 pb-8 border-t border-gray-800 dark:border-gray-800 light:border-gray-200 transition-colors duration-300">
+    <footer className="bg-gray-900 text-white py-12 border-t border-gray-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          <div className="space-y-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <Sparkles className="h-8 w-8 text-primary-400" />
-              <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
-                AgentSphere
-              </span>
-            </Link>
-            <p className="text-gray-400 dark:text-gray-400 light:text-gray-600 text-sm">
-              The premier marketplace for Non-Fungible Agents (NFAs). Discover, trade, and create intelligent agents powered by ChatAndBuild.
+        <div className="flex flex-col items-center text-center">
+          <Link to="/" className="flex items-center space-x-2 mb-6">
+            <Sparkles className="h-8 w-8 text-primary-400" />
+            <span className="text-xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
+              AgentSphere
+            </span>
+          </Link>
+          
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
+            <Link to="/marketplace" className="text-gray-400 hover:text-white transition">Marketplace</Link>
+            <Link to="/community" className="text-gray-400 hover:text-white transition">Community</Link>
+            <Link to="/faq" className="text-gray-400 hover:text-white transition">FAQ</Link>
+            <Link to="/support" className="text-gray-400 hover:text-white transition">Support</Link>
+            <Link to="/contact" className="text-gray-400 hover:text-white transition">Contact</Link>
+            <Link to="/terms" className="text-gray-400 hover:text-white transition">Terms & Privacy</Link>
+          </div>
+          
+          <div className="flex space-x-5 mb-8">
+            <motion.a 
+              href="#" 
+              className="text-gray-400 hover:text-primary-400 transition"
+              whileHover={{ y: -3, scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Twitter className="h-5 w-5" />
+            </motion.a>
+            <motion.a 
+              href="#" 
+              className="text-gray-400 hover:text-primary-400 transition"
+              whileHover={{ y: -3, scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Github className="h-5 w-5" />
+            </motion.a>
+            <motion.a 
+              href="#" 
+              className="text-gray-400 hover:text-primary-400 transition"
+              whileHover={{ y: -3, scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Linkedin className="h-5 w-5" />
+            </motion.a>
+            <motion.a 
+              href="#" 
+              className="text-gray-400 hover:text-primary-400 transition"
+              whileHover={{ y: -3, scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Mail className="h-5 w-5" />
+            </motion.a>
+            <motion.a 
+              href="#" 
+              className="text-gray-400 hover:text-primary-400 transition"
+              whileHover={{ y: -3, scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <svg 
+                className="h-5 w-5" 
+                fill="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z" />
+              </svg>
+            </motion.a>
+          </div>
+          
+          <div className="border-t border-gray-800 w-full pt-8 flex flex-col items-center">
+            <p className="text-gray-500 text-sm mb-2">
+              &copy; {new Date().getFullYear()} AgentSphere. All rights reserved.
             </p>
-            <div className="flex space-x-4 pt-2">
-              <motion.a 
-                href="#" 
-                className="text-gray-400 dark:text-gray-400 light:text-gray-500 hover:text-primary-400 transition"
-                whileHover={{ y: -3, scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Twitter className="h-5 w-5" />
-              </motion.a>
-              <motion.a 
-                href="#" 
-                className="text-gray-400 dark:text-gray-400 light:text-gray-500 hover:text-primary-400 transition"
-                whileHover={{ y: -3, scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Github className="h-5 w-5" />
-              </motion.a>
-              <motion.a 
-                href="#" 
-                className="text-gray-400 dark:text-gray-400 light:text-gray-500 hover:text-primary-400 transition"
-                whileHover={{ y: -3, scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Linkedin className="h-5 w-5" />
-              </motion.a>
-              <motion.a 
-                href="#" 
-                className="text-gray-400 dark:text-gray-400 light:text-gray-500 hover:text-primary-400 transition"
-                whileHover={{ y: -3, scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Mail className="h-5 w-5" />
-              </motion.a>
-            </div>
+            <p className="text-gray-500 text-sm">
+              Built with <span className="text-primary-400">❤</span> using <a href="https://www.chatandbuild.com" className="text-primary-400 hover:underline">ChatAndBuild</a>
+            </p>
           </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-white dark:text-white light:text-gray-900">Marketplace</h3>
-            <ul className="space-y-2">
-              <li><Link to="/explore" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">All Agents</Link></li>
-              <li><Link to="/trending" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Trending</Link></li>
-              <li><Link to="/new" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">New Releases</Link></li>
-              <li><Link to="/collections" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Collections</Link></li>
-              <li><Link to="/creators" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Top Creators</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-white dark:text-white light:text-gray-900">Resources</h3>
-            <ul className="space-y-2">
-              <li><Link to="/docs" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Documentation</Link></li>
-              <li><Link to="/guides" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Guides</Link></li>
-              <li><Link to="/api" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">API Reference</Link></li>
-              <li><Link to="/faq" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">FAQ</Link></li>
-              <li><Link to="/support" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Support</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-white dark:text-white light:text-gray-900">Community</h3>
-            <ul className="space-y-2">
-              <li>
-                <a 
-                  href="https://chatandbuild.com/community" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition"
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  <span>Join CommunitySpace</span>
-                </a>
-              </li>
-              <li><Link to="/about" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">About Us</Link></li>
-              <li><Link to="/careers" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Careers</Link></li>
-              <li><Link to="/blog" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Blog</Link></li>
-              <li><Link to="/privacy" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-gray-400 dark:text-gray-400 light:text-gray-600 hover:text-white dark:hover:text-white light:hover:text-gray-900 transition">Terms of Service</Link></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="border-t border-gray-800 dark:border-gray-800 light:border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} AgentSphere. All rights reserved.
-          </p>
-          <p className="text-gray-500 text-sm mt-4 md:mt-0">
-            Built with <span className="text-primary-400">❤</span> using <a href="https://www.chatandbuild.com" className="text-primary-400 hover:underline">ChatAndBuild</a>
-          </p>
         </div>
       </div>
     </footer>
