@@ -1,4 +1,4 @@
-import { Agent, Category } from '../types';
+import { Agent } from '../types';
 
 export const featuredAgents: Agent[] = [
   {
@@ -15,6 +15,9 @@ export const featuredAgents: Agent[] = [
     tags: ["coding", "development", "programming"],
     createdAt: "2023-09-15T10:00:00Z",
     updatedAt: "2023-10-20T14:30:00Z",
+    requirements: ["VS Code or JetBrains IDE", "Internet connection"],
+    useCases: ["Pair programming", "Code review", "Learning new languages"],
+    reviews: [],
     details: {
       longDescription: "CodeAssist Pro is an advanced AI coding assistant that helps developers write better code faster. It provides real-time suggestions, identifies potential bugs, and offers refactoring options to improve code quality. With its pair programming capabilities, it's like having an expert developer by your side at all times.",
       useCases: [
@@ -47,6 +50,9 @@ export const featuredAgents: Agent[] = [
     tags: ["design", "ui", "ux"],
     createdAt: "2023-08-22T09:15:00Z",
     updatedAt: "2023-10-18T11:45:00Z",
+    requirements: ["Figma or Adobe XD", "Design system"],
+    useCases: ["UI design", "Wireframing", "Design systems"],
+    reviews: [],
     details: {
       longDescription: "DesignGenius is your AI design partner that helps create beautiful and functional user interfaces. From wireframing to color palette selection, it assists designers in making informed decisions and creating cohesive designs. It can generate component suggestions based on your design system and ensure responsive layouts across all devices.",
       useCases: [
@@ -79,6 +85,9 @@ export const featuredAgents: Agent[] = [
     tags: ["data", "analytics", "business intelligence"],
     createdAt: "2023-07-10T14:20:00Z",
     updatedAt: "2023-10-15T16:30:00Z",
+    requirements: ["CSV or Excel data", "Visualization tool"],
+    useCases: ["Business intelligence", "Data analysis", "Reporting"],
+    reviews: [],
     details: {
       longDescription: "DataWizard transforms raw data into actionable insights through advanced analysis and beautiful visualizations. It automates data cleaning processes, identifies patterns and trends, and generates comprehensive reports. With natural language querying, you can ask questions about your data and receive instant answers with supporting visualizations.",
       useCases: [
@@ -111,6 +120,9 @@ export const featuredAgents: Agent[] = [
     tags: ["content", "writing", "marketing"],
     createdAt: "2023-09-05T11:30:00Z",
     updatedAt: "2023-10-22T09:15:00Z",
+    requirements: ["Content brief", "Brand guidelines"],
+    useCases: ["Blog posts", "Social media", "Marketing copy"],
+    reviews: [],
     details: {
       longDescription: "ContentCraft is an AI-powered content creation assistant that helps marketers, bloggers, and businesses generate engaging written content. From blog posts to social media updates, it can create content that resonates with your target audience while maintaining your brand voice. It also provides SEO optimization suggestions to improve content visibility.",
       useCases: [
@@ -143,6 +155,9 @@ export const featuredAgents: Agent[] = [
     tags: ["finance", "investing", "trading"],
     createdAt: "2023-08-15T08:45:00Z",
     updatedAt: "2023-10-19T13:20:00Z",
+    requirements: ["Financial data", "Investment portfolio"],
+    useCases: ["Investment analysis", "Portfolio management", "Financial planning"],
+    reviews: [],
     details: {
       longDescription: "FinanceGPT is your AI financial advisor, providing market analysis, investment recommendations, and portfolio management assistance. It tracks market trends, analyzes company fundamentals, and helps you make informed investment decisions. With risk assessment tools and financial planning capabilities, it's a comprehensive solution for individual investors and financial professionals.",
       useCases: [
@@ -175,6 +190,9 @@ export const featuredAgents: Agent[] = [
     tags: ["legal", "contracts", "compliance"],
     createdAt: "2023-07-25T15:10:00Z",
     updatedAt: "2023-10-17T10:45:00Z",
+    requirements: ["Legal documents", "Jurisdiction information"],
+    useCases: ["Contract review", "Legal research", "Compliance"],
+    reviews: [],
     details: {
       longDescription: "LegalAssist is an AI-powered legal assistant that helps lawyers and businesses analyze legal documents, review contracts, and ensure compliance with relevant regulations. It can identify potential risks in agreements, suggest alternative clauses, and even assist in drafting new documents based on templates and requirements.",
       useCases: [
@@ -210,6 +228,9 @@ export const trendingAgents: Agent[] = [
     tags: ["video", "editing", "production"],
     createdAt: "2023-09-20T13:15:00Z",
     updatedAt: "2023-10-21T15:30:00Z",
+    requirements: ["Video footage", "Editing software"],
+    useCases: ["Video production", "Content creation", "Film editing"],
+    reviews: [],
     details: {
       longDescription: "VideoGenius is an AI video production assistant that helps creators edit and enhance their videos. It can suggest scene arrangements, recommend transitions and effects, and even generate B-roll footage suggestions. With its intelligent editing capabilities, it streamlines the video production process while maintaining creative control.",
       useCases: [
@@ -242,6 +263,9 @@ export const trendingAgents: Agent[] = [
     tags: ["health", "fitness", "wellness"],
     createdAt: "2023-08-10T09:30:00Z",
     updatedAt: "2023-10-16T14:15:00Z",
+    requirements: ["Health data", "Fitness goals"],
+    useCases: ["Fitness planning", "Nutrition guidance", "Health tracking"],
+    reviews: [],
     details: {
       longDescription: "HealthCoach is your personal AI wellness assistant, providing customized nutrition plans, workout routines, and health tracking capabilities. It adapts to your goals, preferences, and progress, offering personalized recommendations to improve your overall wellbeing. With habit formation strategies and motivational support, it helps you maintain a healthy lifestyle long-term.",
       useCases: [
@@ -274,6 +298,9 @@ export const trendingAgents: Agent[] = [
     tags: ["travel", "vacation", "planning"],
     createdAt: "2023-09-12T10:45:00Z",
     updatedAt: "2023-10-20T11:30:00Z",
+    requirements: ["Travel dates", "Destination preferences"],
+    useCases: ["Trip planning", "Local recommendations", "Travel booking"],
+    reviews: [],
     details: {
       longDescription: "TravelPlanner is an AI travel assistant that helps you plan and book your perfect trip. It creates personalized itineraries based on your interests, budget, and travel style, while providing local insights and hidden gems. From flight and accommodation recommendations to daily activity scheduling, it handles all aspects of your travel planning.",
       useCases: [
@@ -306,6 +333,9 @@ export const trendingAgents: Agent[] = [
     tags: ["music", "production", "composition"],
     createdAt: "2023-08-05T16:20:00Z",
     updatedAt: "2023-10-18T09:45:00Z",
+    requirements: ["Music production software", "MIDI controller"],
+    useCases: ["Music composition", "Production assistance", "Arrangement"],
+    reviews: [],
     details: {
       longDescription: "MusicMuse is an AI music composition and production assistant that helps musicians create original music. It can generate melodies, suggest chord progressions, and provide arrangement ideas across various genres and styles. With its mixing and mastering assistance, it helps you achieve professional-quality sound in your productions.",
       useCases: [
@@ -329,7 +359,7 @@ export const trendingAgents: Agent[] = [
     name: "EduTutor",
     description: "Educational tutoring assistant with personalized learning paths, interactive lessons, and progress tracking.",
     creator: "LearnSmart",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.35",
     rating: 4.9,
     reviewCount: 312,
@@ -338,6 +368,9 @@ export const trendingAgents: Agent[] = [
     tags: ["education", "tutoring", "learning"],
     createdAt: "2023-07-15T11:30:00Z",
     updatedAt: "2023-10-19T16:45:00Z",
+    requirements: ["Learning materials", "Educational goals"],
+    useCases: ["Tutoring", "Exam preparation", "Skill development"],
+    reviews: [],
     details: {
       longDescription: "EduTutor is an AI educational assistant that provides personalized tutoring across various subjects and grade levels. It creates customized learning paths based on individual needs and learning styles, offering interactive lessons and exercises. With its adaptive learning capabilities, it adjusts difficulty and focus areas based on student progress.",
       useCases: [
@@ -370,6 +403,9 @@ export const trendingAgents: Agent[] = [
     tags: ["game design", "development", "gaming"],
     createdAt: "2023-09-08T14:15:00Z",
     updatedAt: "2023-10-22T12:30:00Z",
+    requirements: ["Game engine", "Design assets"],
+    useCases: ["Game development", "Level design", "Character creation"],
+    reviews: [],
     details: {
       longDescription: "GameDesigner is an AI game development assistant that helps creators design and build engaging games. From level design and character creation to gameplay mechanics and narrative development, it provides suggestions and solutions throughout the game development process. It can generate assets, balance gameplay elements, and even help with debugging.",
       useCases: [
@@ -390,7 +426,7 @@ export const trendingAgents: Agent[] = [
   }
 ];
 
-export const categories: Category[] = [
+export const categories = [
   {
     id: "cat1",
     name: "Development",

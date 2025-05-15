@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Agent } from '../types';
 import { motion } from 'framer-motion';
@@ -20,7 +20,30 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
   linkUrl 
 }) => {
   const [startIndex, setStartIndex] = React.useState(0);
-  const itemsToShow = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
+  const [itemsToShow, setItemsToShow] = React.useState(4);
+  const navigate = useNavigate();
+  
+  // Set initial itemsToShow based on screen size
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsToShow(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(4);
+      }
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Auto-slide effect
   React.useEffect(() => {
@@ -43,6 +66,10 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
     setStartIndex((prevIndex) => 
       Math.min(agents.length - itemsToShow, prevIndex + 1)
     );
+  };
+
+  const handleViewDetails = (agentId: string) => {
+    navigate(`/agent/${agentId}`);
   };
 
   const visibleAgents = agents.slice(startIndex, startIndex + itemsToShow);
@@ -146,12 +173,12 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
                       <span className="text-lg font-bold text-white">{agent.price} ETH</span>
                     </div>
                     
-                    <Link 
-                      to={`/agent/${agent.id}`}
+                    <button 
+                      onClick={() => handleViewDetails(agent.id)}
                       className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-center transition"
                     >
                       View details
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </motion.div>

@@ -1,11 +1,12 @@
-import { Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import Home from './pages/Home'
-import Dashboard from './pages/Dashboard'
-import Search from './pages/Search'
-import AgentDetail from './pages/AgentDetail'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import AgentDetail from './pages/AgentDetail';
+import Search from './pages/Search';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -15,15 +16,15 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/search" element={<Search />} />
             <Route path="/agent/:id" element={<AgentDetail />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
         <Footer />
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;
