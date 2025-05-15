@@ -9,11 +9,19 @@ export interface Agent {
   reviewCount: number;
   creator: string;
   createdAt: string;
+  updatedAt: string;
   tags: string[];
   capabilities: string[];
   requirements: string[];
   useCases: string[];
   reviews: Review[];
+  details?: {
+    longDescription?: string;
+    useCases?: string[];
+    requirements?: string[];
+    version?: string;
+    lastUpdated?: string;
+  };
 }
 
 export interface Review {

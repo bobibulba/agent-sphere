@@ -1,9 +1,9 @@
 import React from 'react';
 import Hero from '../components/Hero';
-import WhatIsAgentSphere from '../components/WhatIsAgentSphere';
 import Partners from '../components/Partners';
 import CallToAction from '../components/CallToAction';
 import CommunityBanner from '../components/CommunityBanner';
+import WhatIsAgentSphere from '../components/WhatIsAgentSphere';
 
 const Home: React.FC = () => {
   return (

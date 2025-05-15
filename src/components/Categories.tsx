@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
-import { AgentCategory } from '../types';
+import { Category } from '../types';
 
 interface CategoriesProps {
-  categories: AgentCategory[];
+  categories: Category[];
 }
 
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
@@ -14,6 +14,22 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
     const Icon = (LucideIcons as any)[iconName];
     return Icon ? <Icon className="h-6 w-6" /> : null;
   };
+
+  // Add a safety check to prevent mapping over undefined
+  if (!categories || categories.length === 0) {
+    return (
+      <section className="py-16 bg-dark">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Browse by Category</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Loading categories...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 bg-dark">

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Agent } from '../types';
 import { motion } from 'framer-motion';
 
@@ -62,10 +62,9 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
           </motion.div>
           <Link 
             to={linkUrl}
-            className="group flex items-center space-x-2 text-blue-400 hover:text-blue-300 mt-4 md:mt-0"
+            className="text-blue-400 hover:text-blue-300 mt-4 md:mt-0"
           >
-            <span>{linkText}</span>
-            <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition" />
+            {linkText}
           </Link>
         </div>
         
@@ -106,50 +105,55 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
               >
-                <Link to={`/agent/${agent.id}`} className="block">
-                  <div className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-blue-500 transition duration-300 h-full flex flex-col">
-                    <div className="relative">
-                      <img 
-                        src={agent.image} 
-                        alt={agent.name}
-                        className="w-full aspect-video object-cover"
-                      />
-                      <div className="absolute top-2 right-2 bg-gray-900/80 text-white text-xs font-medium px-2 py-1 rounded-full">
-                        {agent.category}
+                <div className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-blue-500 transition duration-300 h-full flex flex-col">
+                  <div className="relative">
+                    <img 
+                      src={agent.image} 
+                      alt={agent.name}
+                      className="w-full aspect-video object-cover"
+                    />
+                    <div className="absolute top-2 right-2 bg-gray-900/80 text-white text-xs font-medium px-2 py-1 rounded-full">
+                      {agent.category}
+                    </div>
+                  </div>
+                  
+                  <div className="p-5 flex-grow flex flex-col">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
+                      <div className="flex items-center space-x-1 text-yellow-400">
+                        <Star className="h-4 w-4 fill-current" />
+                        <span className="text-sm">{agent.rating}</span>
                       </div>
                     </div>
                     
-                    <div className="p-5 flex-grow flex flex-col">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
-                        <div className="flex items-center space-x-1 text-yellow-400">
-                          <Star className="h-4 w-4 fill-current" />
-                          <span className="text-sm">{agent.rating}</span>
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-400 text-sm mb-4 flex-grow">{agent.description}</p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {agent.capabilities.slice(0, 2).map((capability, i) => (
-                          <span key={i} className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
-                            {capability}
-                          </span>
-                        ))}
-                        {agent.capabilities.length > 2 && (
-                          <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
-                            +{agent.capabilities.length - 2} more
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-700">
-                        <span className="text-sm text-gray-400">by {agent.creator}</span>
-                        <span className="text-lg font-bold text-white">{agent.price} ETH</span>
-                      </div>
+                    <p className="text-gray-400 text-sm mb-4 flex-grow">{agent.description}</p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {agent.capabilities.slice(0, 2).map((capability, i) => (
+                        <span key={i} className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
+                          {capability}
+                        </span>
+                      ))}
+                      {agent.capabilities.length > 2 && (
+                        <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
+                          +{agent.capabilities.length - 2} more
+                        </span>
+                      )}
                     </div>
+                    
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                      <span className="text-sm text-gray-400">by {agent.creator}</span>
+                      <span className="text-lg font-bold text-white">{agent.price} ETH</span>
+                    </div>
+                    
+                    <Link 
+                      to={`/agent/${agent.id}`}
+                      className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-center transition"
+                    >
+                      View details
+                    </Link>
                   </div>
-                </Link>
+                </div>
               </motion.div>
             ))}
           </div>
