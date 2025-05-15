@@ -1,70 +1,94 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import * as LucideIcons from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Category } from '../types';
+import { 
+  Code, 
+  Palette, 
+  FileText, 
+  BarChart, 
+  DollarSign, 
+  GraduationCap, 
+  Heart, 
+  Scale,
+  ChevronRight
+} from 'lucide-react';
 
 interface CategoriesProps {
   categories: Category[];
 }
 
+const iconMap: Record<string, React.ReactNode> = {
+  'Code': <Code className="h-6 w-6" />,
+  'Palette': <Palette className="h-6 w-6" />,
+  'FileText': <FileText className="h-6 w-6" />,
+  'BarChart': <BarChart className="h-6 w-6" />,
+  'DollarSign': <DollarSign className="h-6 w-6" />,
+  'GraduationCap': <GraduationCap className="h-6 w-6" />,
+  'Heart': <Heart className="h-6 w-6" />,
+  'Scale': <Scale className="h-6 w-6" />
+};
+
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
-  // Dynamically get the icon component
-  const getIcon = (iconName: string) => {
-    const Icon = (LucideIcons as any)[iconName];
-    return Icon ? <Icon className="h-6 w-6" /> : null;
-  };
-
-  // Add a safety check to prevent mapping over undefined
-  if (!categories || categories.length === 0) {
-    return (
-      <section className="py-16 bg-dark">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Browse by Category</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Loading categories...
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="py-16 bg-dark">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-16 bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">Browse by Category</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Explore our diverse collection of AI agents categorized by their specialized capabilities and use cases.
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Browse by Category</h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Explore our diverse collection of AI agents organized by specialized categories
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {categories.map((category) => (
             <motion.div
               key={category.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-primary-500 transition-all duration-300"
+              whileHover={{ y: -5, boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.1)' }}
             >
-              <Link 
-                to={`/category/${category.id}`}
-                className="block bg-gray-800 border border-gray-700 hover:border-primary-500 rounded-xl p-6 text-center transition duration-300 h-full"
-              >
-                <div className="bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full p-4 inline-flex mb-4">
-                  <div className="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full p-3 text-white">
-                    {getIcon(category.icon)}
+              <Link to={`/marketplace?category=${category.name}`} className="block h-full">
+                <div className="relative h-40 overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.name} 
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold text-white">{category.name}</h3>
+                      <span className="px-2 py-1 bg-gray-700 bg-opacity-80 text-primary-400 text-sm rounded">
+                        {category.count}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 
-                <h3 className="text-lg font-semibold text-white mb-2">{category.name}</h3>
-                <p className="text-gray-400 text-sm mb-3">{category.description}</p>
-                <span className="text-primary-400 text-sm font-medium">{category.count} agents</span>
+                <div className="p-5">
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">{category.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-primary-400">
+                      <span className="text-sm font-medium">Explore category</span>
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-primary-400">
+                      {iconMap[category.icon]}
+                    </div>
+                  </div>
+                </div>
               </Link>
             </motion.div>
           ))}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Link 
+            to="/marketplace"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300"
+          >
+            View All Categories
+          </Link>
         </div>
       </div>
     </section>

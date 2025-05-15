@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Search from './pages/Search';
 import AgentDetail from './pages/AgentDetail';
+import Marketplace from './pages/Marketplace';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -19,6 +20,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/search" element={<Search />} />
               <Route path="/agent/:id" element={<AgentDetail />} />
+              <Route path="/marketplace" element={<Marketplace />} />
             </Routes>
           </main>
           <Footer />
