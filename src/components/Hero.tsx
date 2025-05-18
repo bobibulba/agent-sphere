@@ -94,6 +94,7 @@ const FeaturedAgentCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const featuredAgents = [
     {
+      id: "code-assist-pro",
       name: "CodeAssist Pro",
       creator: "ChatAndBuild Labs",
       description: "Advanced coding assistant with real-time pair programming capabilities. Helps with code completion, bug detection, and more.",
@@ -102,6 +103,7 @@ const FeaturedAgentCarousel: React.FC = () => {
       tags: ["Code completion", "Bug detection", "Refactoring"]
     },
     {
+      id: "design-genius",
       name: "DesignGenius",
       creator: "PixelPerfect Studios",
       description: "UI/UX design assistant that helps create beautiful interfaces with wireframing and color palette suggestions.",
@@ -110,6 +112,7 @@ const FeaturedAgentCarousel: React.FC = () => {
       tags: ["Wireframing", "Color palette", "Components"]
     },
     {
+      id: "data-wizard",
       name: "DataWizard",
       creator: "AnalyticsPro",
       description: "Data analysis and visualization assistant for business intelligence with powerful insights extraction.",
@@ -205,9 +208,12 @@ const FeaturedAgentCarousel: React.FC = () => {
             </div>
             
             <div className="flex space-x-3">
-              <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
+              <Link 
+                to={`/agent/${agent.id}`} 
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+              >
                 View Details
-              </button>
+              </Link>
             </div>
             
             <Link to="/featured" className="block text-center text-blue-400 hover:text-blue-300 text-sm mt-2">
