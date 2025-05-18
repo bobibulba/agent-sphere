@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Star, ArrowUpDown, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Search, Filter, ChevronDown, Star, ArrowUpDown, X, ChevronUp, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
 import { Link } from 'react-router-dom';
@@ -15,6 +15,7 @@ const Marketplace: React.FC = () => {
   const [sortBy, setSortBy] = useState<'popular' | 'price' | 'rating' | 'newest'>('popular');
   const [selectedUseCases, setSelectedUseCases] = useState<string[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [isFilterSidebarCollapsed, setIsFilterSidebarCollapsed] = useState(false);
 
   // Common use cases for filtering
   const useCases = [
@@ -139,7 +140,7 @@ const Marketplace: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              AI Agent Marketplace
+              AgentSphere Marketplace
             </motion.h1>
             <motion.p 
               className="text-xl text-gray-300 max-w-3xl mx-auto"
@@ -187,45 +188,24 @@ const Marketplace: React.FC = () => {
         </div>
         
         {/* Mobile filter panel */}
-        {isMobileFilterOpen && (
-          <motion.div 
-            className="lg:hidden mb-8 p-6 bg-gray-800 rounded-xl border border-gray-700"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Filters</h3>
-              <button 
-                onClick={() => setIsMobileFilterOpen(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            
-            <FilterContent 
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              minRating={minRating}
-              setMinRating={setMinRating}
-              useCases={useCases}
-              selectedUseCases={selectedUseCases}
-              toggleUseCase={toggleUseCase}
-              resetFilters={resetFilters}
-            />
-          </motion.div>
-        )}
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar Filters */}
-          <div className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-6 bg-gray-800 rounded-xl border border-gray-700 p-6">
-              <h3 className="text-lg font-medium mb-6">Filters</h3>
+        <AnimatePresence>
+          {isMobileFilterOpen && (
+            <motion.div 
+              className="lg:hidden mb-8 p-6 bg-gray-800 rounded-xl border border-gray-700"
+              initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
+              animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
+              exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium">Filters</h3>
+                <button 
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
               
               <FilterContent 
                 categories={categories}
@@ -240,6 +220,46 @@ const Marketplace: React.FC = () => {
                 toggleUseCase={toggleUseCase}
                 resetFilters={resetFilters}
               />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar Filters */}
+          <div className={`hidden lg:block ${isFilterSidebarCollapsed ? 'w-12' : 'w-64'} shrink-0 transition-all duration-300`}>
+            <div className="sticky top-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden transition-all duration-300">
+              <div className="flex justify-between items-center p-4 border-b border-gray-700">
+                {!isFilterSidebarCollapsed && <h3 className="text-lg font-medium">Filters</h3>}
+                <button 
+                  onClick={() => setIsFilterSidebarCollapsed(!isFilterSidebarCollapsed)}
+                  className={`text-gray-400 hover:text-white ${isFilterSidebarCollapsed ? 'mx-auto' : ''}`}
+                  aria-label={isFilterSidebarCollapsed ? "Expand filters" : "Collapse filters"}
+                >
+                  {isFilterSidebarCollapsed ? (
+                    <ChevronRight className="h-5 w-5" />
+                  ) : (
+                    <ChevronLeft className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+              
+              {!isFilterSidebarCollapsed && (
+                <div className="p-4">
+                  <FilterContent 
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                    minRating={minRating}
+                    setMinRating={setMinRating}
+                    useCases={useCases}
+                    selectedUseCases={selectedUseCases}
+                    toggleUseCase={toggleUseCase}
+                    resetFilters={resetFilters}
+                  />
+                </div>
+              )}
             </div>
           </div>
           
@@ -425,100 +445,206 @@ const FilterContent: React.FC<FilterContentProps> = ({
   toggleUseCase,
   resetFilters
 }) => {
+  const [expandedSections, setExpandedSections] = useState({
+    priceRange: true,
+    categories: true,
+    rating: true,
+    useCases: true
+  });
+
+  const toggleSection = (section: keyof typeof expandedSections) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Price Range */}
-      <div>
-        <h4 className="text-md font-medium mb-3">Price Range</h4>
-        <div className="space-y-4">
-          <input 
-            type="range" 
-            min="0" 
-            max="1" 
-            step="0.01"
-            value={priceRange[1]}
-            onChange={(e) => setPriceRange([priceRange[0], parseFloat(e.target.value)])}
-            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary-500"
-          />
-          <div className="flex justify-between">
-            <span className="text-sm text-gray-400">$0</span>
-            <span className="text-sm text-gray-400">Max: ${priceRange[1].toFixed(2)}</span>
-          </div>
-        </div>
+      <div className="border-b border-gray-700 pb-4">
+        <button 
+          className="flex items-center justify-between w-full text-left mb-2"
+          onClick={() => toggleSection('priceRange')}
+        >
+          <h4 className="text-md font-medium">Price Range</h4>
+          {expandedSections.priceRange ? (
+            <ChevronUp className="h-4 w-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          )}
+        </button>
+        
+        <AnimatePresence>
+          {expandedSections.priceRange && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-4 mt-3">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01"
+                  value={priceRange[1]}
+                  onChange={(e) => setPriceRange([priceRange[0], parseFloat(e.target.value)])}
+                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                />
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-400">$0</span>
+                  <span className="text-sm text-gray-400">Max: ${priceRange[1].toFixed(2)}</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       {/* Categories */}
-      <div>
-        <h4 className="text-md font-medium mb-3">Categories</h4>
-        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-          {categories.map((category) => (
-            <div key={category.id} className="flex items-center">
-              <button
-                className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                  selectedCategory === category.name 
-                    ? 'bg-primary-500 bg-opacity-20 text-primary-400' 
-                    : 'hover:bg-gray-700 text-gray-300'
-                }`}
-                onClick={() => setSelectedCategory(
-                  selectedCategory === category.name ? null : category.name
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <span>{category.name}</span>
-                  <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
-                    {category.count}
-                  </span>
-                </div>
-              </button>
-            </div>
-          ))}
-        </div>
+      <div className="border-b border-gray-700 pb-4">
+        <button 
+          className="flex items-center justify-between w-full text-left mb-2"
+          onClick={() => toggleSection('categories')}
+        >
+          <h4 className="text-md font-medium">Categories</h4>
+          {expandedSections.categories ? (
+            <ChevronUp className="h-4 w-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          )}
+        </button>
+        
+        <AnimatePresence>
+          {expandedSections.categories && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-2 mt-3">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center">
+                    <button
+                      className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                        selectedCategory === category.name 
+                          ? 'bg-primary-500 bg-opacity-20 text-primary-400' 
+                          : 'hover:bg-gray-700 text-gray-300'
+                      }`}
+                      onClick={() => setSelectedCategory(
+                        selectedCategory === category.name ? null : category.name
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>{category.name}</span>
+                        <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
+                          {category.count}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       {/* Minimum Rating */}
-      <div>
-        <h4 className="text-md font-medium mb-3">Minimum Rating</h4>
-        <div className="flex items-center space-x-1">
-          {[1, 2, 3, 4, 5].map((rating) => (
-            <button
-              key={rating}
-              className={`p-1.5 rounded-md ${
-                minRating >= rating ? 'text-yellow-400' : 'text-gray-500'
-              }`}
-              onClick={() => setMinRating(rating === minRating ? 0 : rating)}
-            >
-              <Star className="h-5 w-5 fill-current" />
-            </button>
-          ))}
-          {minRating > 0 && (
-            <button 
-              className="ml-2 text-xs text-gray-400 hover:text-white"
-              onClick={() => setMinRating(0)}
-            >
-              Clear
-            </button>
+      <div className="border-b border-gray-700 pb-4">
+        <button 
+          className="flex items-center justify-between w-full text-left mb-2"
+          onClick={() => toggleSection('rating')}
+        >
+          <h4 className="text-md font-medium">Minimum Rating</h4>
+          {expandedSections.rating ? (
+            <ChevronUp className="h-4 w-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-400" />
           )}
-        </div>
+        </button>
+        
+        <AnimatePresence>
+          {expandedSections.rating && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="flex items-center space-x-1 mt-3">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    className={`p-1.5 rounded-md ${
+                      minRating >= rating ? 'text-yellow-400' : 'text-gray-500'
+                    }`}
+                    onClick={() => setMinRating(rating === minRating ? 0 : rating)}
+                  >
+                    <Star className="h-5 w-5 fill-current" />
+                  </button>
+                ))}
+                {minRating > 0 && (
+                  <button 
+                    className="ml-2 text-xs text-gray-400 hover:text-white"
+                    onClick={() => setMinRating(0)}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       {/* Use Cases */}
-      <div>
-        <h4 className="text-md font-medium mb-3">Use Cases</h4>
-        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-          {useCases.map((useCase) => (
-            <div key={useCase} className="flex items-center">
-              <label className="flex items-center space-x-2 cursor-pointer w-full">
-                <input 
-                  type="checkbox" 
-                  checked={selectedUseCases.includes(useCase)}
-                  onChange={() => toggleUseCase(useCase)}
-                  className="rounded border-gray-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-gray-800"
-                />
-                <span className="text-gray-300">{useCase}</span>
-              </label>
-            </div>
-          ))}
-        </div>
+      <div className="border-b border-gray-700 pb-4">
+        <button 
+          className="flex items-center justify-between w-full text-left mb-2"
+          onClick={() => toggleSection('useCases')}
+        >
+          <h4 className="text-md font-medium">Use Cases</h4>
+          {expandedSections.useCases ? (
+            <ChevronUp className="h-4 w-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-gray-400" />
+          )}
+        </button>
+        
+        <AnimatePresence>
+          {expandedSections.useCases && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-2 max-h-60 overflow-y-auto pr-2 mt-3">
+                {useCases.map((useCase) => (
+                  <div key={useCase} className="flex items-center">
+                    <label className="flex items-center space-x-2 cursor-pointer w-full">
+                      <input 
+                        type="checkbox" 
+                        checked={selectedUseCases.includes(useCase)}
+                        onChange={() => toggleUseCase(useCase)}
+                        className="rounded border-gray-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-gray-800"
+                      />
+                      <span className="text-gray-300">{useCase}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       
       {/* Reset button */}
@@ -531,5 +657,23 @@ const FilterContent: React.FC<FilterContentProps> = ({
     </div>
   );
 };
+
+// Custom ChevronLeft icon component
+const ChevronLeft = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="m15 18-6-6 6-6"/>
+  </svg>
+);
 
 export default Marketplace;
