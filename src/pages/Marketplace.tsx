@@ -226,39 +226,47 @@ const Marketplace: React.FC = () => {
         
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar Filters */}
-          <div className={`hidden lg:block ${isFilterSidebarCollapsed ? 'w-12' : 'w-64'} shrink-0 transition-all duration-300`}>
+          <div className={`hidden lg:block ${isFilterSidebarCollapsed ? 'w-16' : 'w-64'} shrink-0 transition-all duration-300`}>
             <div className="sticky top-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden transition-all duration-300">
-              <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                {!isFilterSidebarCollapsed && <h3 className="text-lg font-medium">Filters</h3>}
+              {isFilterSidebarCollapsed ? (
                 <button 
-                  onClick={() => setIsFilterSidebarCollapsed(!isFilterSidebarCollapsed)}
-                  className={`text-gray-400 hover:text-white ${isFilterSidebarCollapsed ? 'mx-auto' : ''}`}
-                  aria-label={isFilterSidebarCollapsed ? "Expand filters" : "Collapse filters"}
+                  onClick={() => setIsFilterSidebarCollapsed(false)}
+                  className="flex items-center justify-center w-full py-3 px-2 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+                  aria-label="Expand filters"
                 >
-                  {isFilterSidebarCollapsed ? (
-                    <ChevronRight className="h-5 w-5" />
-                  ) : (
-                    <ChevronLeft className="h-5 w-5" />
-                  )}
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium mr-1">Filters</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
                 </button>
-              </div>
-              
-              {!isFilterSidebarCollapsed && (
-                <div className="p-4">
-                  <FilterContent 
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
-                    minRating={minRating}
-                    setMinRating={setMinRating}
-                    useCases={useCases}
-                    selectedUseCases={selectedUseCases}
-                    toggleUseCase={toggleUseCase}
-                    resetFilters={resetFilters}
-                  />
-                </div>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center p-4 border-b border-gray-700">
+                    <h3 className="text-lg font-medium">Filters</h3>
+                    <button 
+                      onClick={() => setIsFilterSidebarCollapsed(true)}
+                      className="text-gray-400 hover:text-white"
+                      aria-label="Collapse filters"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <FilterContent 
+                      categories={categories}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                      priceRange={priceRange}
+                      setPriceRange={setPriceRange}
+                      minRating={minRating}
+                      setMinRating={setMinRating}
+                      useCases={useCases}
+                      selectedUseCases={selectedUseCases}
+                      toggleUseCase={toggleUseCase}
+                      resetFilters={resetFilters}
+                    />
+                  </div>
+                </>
               )}
             </div>
           </div>
