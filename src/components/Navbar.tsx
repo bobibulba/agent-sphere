@@ -9,6 +9,9 @@ const Navbar: React.FC = () => {
   const [isSignedIn, setIsSignedIn] = useState(false); // Demo state for signed in/out
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const signInButtonRef = useRef<HTMLButtonElement>(null);
+  const signInModalRef = useRef<HTMLDivElement>(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, right: 0 });
 
   const navItemVariants = {
     initial: { y: -5, opacity: 0 },
@@ -70,11 +73,35 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Calculate modal position when sign-in button is clicked
+  const openSignInModal = () => {
+    if (signInButtonRef.current) {
+      const buttonRect = signInButtonRef.current.getBoundingClientRect();
+      // Position the modal below the button
+      setModalPosition({
+        top: buttonRect.bottom + window.scrollY + 10, // 10px below the button
+        right: window.innerWidth - buttonRect.right // Align right edge with button
+      });
+    }
+    setIsSignInModalOpen(true);
+  };
+
   // Close profile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
+      }
+      
+      // Close sign-in modal when clicking outside, but not on the sign-in button
+      if (
+        isSignInModalOpen && 
+        signInModalRef.current && 
+        !signInModalRef.current.contains(event.target as Node) &&
+        signInButtonRef.current !== event.target &&
+        !signInButtonRef.current?.contains(event.target as Node)
+      ) {
+        setIsSignInModalOpen(false);
       }
     };
 
@@ -82,11 +109,22 @@ const Navbar: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isSignInModalOpen]);
 
   const handleLogout = () => {
     setIsSignedIn(false);
     setIsProfileMenuOpen(false);
+  };
+
+  // Mock function for Web3 wallet connection
+  const connectWallet = () => {
+    // In a real implementation, this would connect to MetaMask or other wallets
+    console.log("Connecting to Web3 wallet...");
+    // Simulate successful connection
+    setTimeout(() => {
+      setIsSignedIn(true);
+      setIsSignInModalOpen(false);
+    }, 1000);
   };
 
   return (
@@ -210,7 +248,8 @@ const Navbar: React.FC = () => {
               </div>
             ) : (
               <motion.button 
-                onClick={() => setIsSignInModalOpen(true)}
+                ref={signInButtonRef}
+                onClick={openSignInModal}
                 className="bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-medium py-2 px-4 rounded-full transition duration-300 flex items-center"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -335,7 +374,13 @@ const Navbar: React.FC = () => {
               />
               
               <motion.div
-                className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 rounded-xl p-6 z-50 w-full max-w-md border border-gray-700 shadow-xl"
+                ref={signInModalRef}
+                className="fixed bg-gray-800 rounded-xl p-6 z-50 w-full max-w-md border border-gray-700 shadow-xl"
+                style={{
+                  top: `${modalPosition.top}px`,
+                  right: `${modalPosition.right}px`,
+                  maxWidth: '400px'
+                }}
                 variants={modalVariants}
                 initial="hidden"
                 animate="visible"
@@ -406,15 +451,31 @@ const Navbar: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-4 gap-3">
                     <button className="flex justify-center items-center py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                       <Github className="h-5 w-5" />
                     </button>
                     <button className="flex justify-center items-center py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                       <Mail className="h-5 w-5" />
                     </button>
-                    <button className="flex justify-center items-center py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                    <button 
+                      className="flex justify-center items-center py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition"
+                      onClick={connectWallet}
+                    >
                       <Wallet className="h-5 w-5" />
+                    </button>
+                    <button 
+                      className="flex justify-center items-center py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg transition"
+                      onClick={connectWallet}
+                    >
+                      <svg className="h-5 w-5" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.0445 0L15.8945 0.5V21.8782L16.0445 22.0279L25.8582 16.4255L16.0445 0Z" fill="white"/>
+                        <path d="M16.0445 0L6.23071 16.4255L16.0445 22.0279V11.7887V0Z" fill="white" fillOpacity="0.8"/>
+                        <path d="M16.0445 23.8855L15.9597 23.9871V31.3453L16.0445 31.5944L25.8645 18.2856L16.0445 23.8855Z" fill="white"/>
+                        <path d="M16.0445 31.5944V23.8855L6.23071 18.2856L16.0445 31.5944Z" fill="white" fillOpacity="0.8"/>
+                        <path d="M16.0445 22.0279L25.8582 16.4255L16.0445 11.7887V22.0279Z" fill="white" fillOpacity="0.9"/>
+                        <path d="M6.23071 16.4255L16.0445 22.0279V11.7887L6.23071 16.4255Z" fill="white" fillOpacity="0.7"/>
+                      </svg>
                     </button>
                   </div>
                   
