@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bot, Menu, X, Search, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User, LayoutDashboard, LogOut } from 'lucide-react';
+import { Bot, Menu, X, Search, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User, LayoutDashboard, LogOut, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWeb3 } from '../context/Web3Context';
+import DemoModeSwitch from './DemoModeSwitch';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-  const { account, isConnected, isConnecting, connectWallet, disconnectWallet } = useWeb3();
+  const settingsMenuRef = useRef<HTMLDivElement>(null);
+  const { account, isConnected, isConnecting, connectWallet, disconnectWallet, isDemoMode } = useWeb3();
 
   const navItemVariants = {
     initial: { y: -5, opacity: 0 },
@@ -44,11 +47,14 @@ const Navbar: React.FC = () => {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 
-  // Close profile menu when clicking outside
+  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
+      }
+      if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
+        setIsSettingsOpen(false);
       }
     };
 
@@ -114,6 +120,44 @@ const Navbar: React.FC = () => {
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             </div>
             
+            {/* Settings button */}
+            <div className="relative" ref={settingsMenuRef}>
+              <motion.button
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                className="bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Settings"
+              >
+                <Settings className="h-5 w-5 text-gray-300" />
+              </motion.button>
+              
+              <AnimatePresence>
+                {isSettingsOpen && (
+                  <motion.div
+                    className="absolute right-0 mt-2 w-64 bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-700"
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <div className="px-4 py-2 border-b border-gray-700">
+                      <p className="text-sm font-medium text-white">Settings</p>
+                    </div>
+                    
+                    <div className="px-4 py-3">
+                      <DemoModeSwitch />
+                      {isDemoMode && (
+                        <div className="mt-2 text-xs text-amber-400 bg-amber-900/30 p-2 rounded">
+                          Demo mode active. Wallet connection is simulated.
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
             {isConnected ? (
               <div className="relative" ref={profileMenuRef}>
                 <motion.button
@@ -124,6 +168,9 @@ const Navbar: React.FC = () => {
                 >
                   <Wallet className="h-4 w-4 text-white mr-2" />
                   <span className="text-sm font-medium">{formatAddress(account || '')}</span>
+                  {isDemoMode && (
+                    <span className="ml-1 text-xs bg-amber-500 text-black px-1.5 py-0.5 rounded-full">Demo</span>
+                  )}
                 </motion.button>
                 
                 <AnimatePresence>
@@ -138,6 +185,11 @@ const Navbar: React.FC = () => {
                       <div className="px-4 py-2 border-b border-gray-700">
                         <p className="text-sm font-medium text-white">Connected Wallet</p>
                         <p className="text-xs text-gray-400 truncate">{account}</p>
+                        {isDemoMode && (
+                          <span className="inline-block mt-1 text-xs bg-amber-500 text-black px-1.5 py-0.5 rounded-full">
+                            Demo Wallet
+                          </span>
+                        )}
                       </div>
                       
                       <Link 
@@ -217,6 +269,15 @@ const Navbar: React.FC = () => {
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               </div>
               
+              <div className="bg-gray-800 p-3 rounded-lg">
+                <DemoModeSwitch />
+                {isDemoMode && (
+                  <div className="mt-2 text-xs text-amber-400 bg-amber-900/30 p-2 rounded">
+                    Demo mode active. Wallet connection is simulated.
+                  </div>
+                )}
+              </div>
+              
               {isConnected ? (
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-2 bg-gray-800 p-3 rounded-lg">
@@ -224,7 +285,12 @@ const Navbar: React.FC = () => {
                       <Wallet className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">Connected Wallet</p>
+                      <div className="flex items-center">
+                        <p className="text-sm font-medium text-white">Connected Wallet</p>
+                        {isDemoMode && (
+                          <span className="ml-1 text-xs bg-amber-500 text-black px-1.5 py-0.5 rounded-full">Demo</span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-400 truncate">{account}</p>
                     </div>
                   </div>

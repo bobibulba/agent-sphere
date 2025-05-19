@@ -9,6 +9,8 @@ interface Web3ContextType {
   disconnectWallet: () => void;
   chainId: number | null;
   provider: ethers.providers.Web3Provider | null;
+  isDemoMode: boolean;
+  toggleDemoMode: () => void;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -17,15 +19,23 @@ interface Web3ProviderProps {
   children: ReactNode;
 }
 
+// Demo wallet address and chain ID
+const DEMO_WALLET_ADDRESS = "0x71C7656EC7ab88b098defB751B7401B5f6d8976F";
+const DEMO_CHAIN_ID = 1; // Ethereum Mainnet
+
 export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [account, setAccount] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [chainId, setChainId] = useState<number | null>(null);
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
 
   // Initialize provider and check for existing connection
   useEffect(() => {
+    // Skip real wallet check if in demo mode
+    if (isDemoMode) return;
+    
     const checkConnection = async () => {
       if (window.ethereum) {
         try {
@@ -48,10 +58,12 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     };
     
     checkConnection();
-  }, []);
+  }, [isDemoMode]);
 
   // Listen for account changes
   useEffect(() => {
+    // Skip event listeners if in demo mode
+    if (isDemoMode) return;
     if (!window.ethereum) return;
 
     const handleAccountsChanged = (accounts: string[]) => {
@@ -79,9 +91,38 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         window.ethereum.removeListener('chainChanged', handleChainChanged);
       }
     };
-  }, []);
+  }, [isDemoMode]);
+
+  // Set up demo wallet when demo mode is enabled
+  useEffect(() => {
+    if (isDemoMode) {
+      setAccount(DEMO_WALLET_ADDRESS);
+      setIsConnected(true);
+      setChainId(DEMO_CHAIN_ID);
+    } else {
+      // Reset state if not already connected to a real wallet
+      if (!window.ethereum || !(provider && account)) {
+        setAccount(null);
+        setIsConnected(false);
+        setChainId(null);
+      }
+    }
+  }, [isDemoMode, provider, account]);
 
   const connectWallet = async () => {
+    // If in demo mode, simulate connection
+    if (isDemoMode) {
+      setIsConnecting(true);
+      // Simulate connection delay
+      setTimeout(() => {
+        setAccount(DEMO_WALLET_ADDRESS);
+        setIsConnected(true);
+        setChainId(DEMO_CHAIN_ID);
+        setIsConnecting(false);
+      }, 1000);
+      return;
+    }
+
     if (!window.ethereum) {
       alert("Please install MetaMask or another Ethereum wallet to connect.");
       return;
@@ -117,6 +158,14 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     setChainId(null);
   };
 
+  const toggleDemoMode = () => {
+    // If currently connected to a real wallet, disconnect first
+    if (isConnected && !isDemoMode) {
+      disconnectWallet();
+    }
+    setIsDemoMode(!isDemoMode);
+  };
+
   return (
     <Web3Context.Provider 
       value={{ 
@@ -126,7 +175,9 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
         connectWallet, 
         disconnectWallet,
         chainId,
-        provider
+        provider,
+        isDemoMode,
+        toggleDemoMode
       }}
     >
       {children}

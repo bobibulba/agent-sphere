@@ -8,7 +8,7 @@ interface WalletButtonProps {
 }
 
 const WalletButton: React.FC<WalletButtonProps> = ({ className = '' }) => {
-  const { account, isConnected, isConnecting, connectWallet } = useWeb3();
+  const { account, isConnected, isConnecting, connectWallet, isDemoMode } = useWeb3();
 
   // Format address for display
   const formatAddress = (address: string) => {
@@ -31,7 +31,12 @@ const WalletButton: React.FC<WalletButtonProps> = ({ className = '' }) => {
       ) : isConnected ? (
         <>
           <Wallet className="h-4 w-4 mr-2" />
-          <span>{formatAddress(account || '')}</span>
+          <span className="flex items-center">
+            {formatAddress(account || '')}
+            {isDemoMode && (
+              <span className="ml-1 text-xs bg-amber-500 text-black px-1.5 py-0.5 rounded-full">Demo</span>
+            )}
+          </span>
         </>
       ) : (
         <>
