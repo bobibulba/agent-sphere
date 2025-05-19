@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Star, ArrowUpDown, X, ChevronUp, ChevronRight } from 'lucide-react';
+import { Search, Filter, ChevronDown, Star, ArrowUpDown, X, ChevronUp, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
@@ -134,14 +134,35 @@ const Marketplace: React.FC = () => {
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6"
+            <motion.div 
+              className="flex items-center justify-center mb-6 gap-3"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              AgentSphere Marketplace
-            </motion.h1>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ 
+                  duration: 0.5,
+                  delay: 0.2,
+                  type: "spring",
+                  stiffness: 200
+                }}
+                whileHover={{ 
+                  rotate: 360,
+                  transition: { duration: 0.5 }
+                }}
+              >
+                <Sparkles className="h-10 w-10 text-primary-400" />
+              </motion.div>
+              <h1 
+                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent"
+                style={{ fontFamily: "'Poppins', sans-serif", letterSpacing: "-0.025em" }}
+              >
+                AgentSphere Marketplace
+              </h1>
+            </motion.div>
             <motion.p 
               className="text-xl text-gray-300 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
@@ -668,6 +689,7 @@ const ChevronLeft = ({ className }: { className?: string }) => (
     width="24" 
     height="24" 
     viewBox="0 0 24 24" 
+    fill="none" 
     fill="none" 
     stroke="currentColor" 
     strokeWidth="2" 
