@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Bot, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const CallToAction: React.FC = () => {
   return (
@@ -48,13 +49,13 @@ const CallToAction: React.FC = () => {
                     <Bot className="h-5 w-5" />
                   </a>
                   
-                  <a 
-                    href="/marketplace" 
+                  <Link 
+                    to="/marketplace" 
                     className="bg-transparent border border-gray-700 hover:border-blue-500 text-white font-medium py-3 px-8 rounded-full flex items-center justify-center space-x-2 transition duration-300"
                   >
                     <span>Browse Marketplace</span>
                     <ArrowRight className="h-5 w-5" />
-                  </a>
+                  </Link>
                 </div>
               </motion.div>
               

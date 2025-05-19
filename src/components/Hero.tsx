@@ -42,13 +42,13 @@ const Hero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <a 
-                href="/explore" 
+              <Link 
+                to="/marketplace" 
                 className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-full flex items-center justify-center space-x-2 transition duration-300 shadow-glow"
               >
                 <span>Explore Agents</span>
                 <ArrowRight className="h-5 w-5" />
-              </a>
+              </Link>
               
               <a 
                 href="https://chatandbuild.com" 
@@ -216,7 +216,7 @@ const FeaturedAgentCarousel: React.FC = () => {
               </Link>
             </div>
             
-            <Link to="/featured" className="block text-center text-blue-400 hover:text-blue-300 text-sm mt-2">
+            <Link to="/marketplace" className="block text-center text-blue-400 hover:text-blue-300 text-sm mt-2">
               Explore all featured agents
             </Link>
           </motion.div>
