@@ -210,7 +210,7 @@ const FeaturedAgentCarousel: React.FC = () => {
             <div className="flex space-x-3">
               <Link 
                 to={`/agent/${agent.id}`} 
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition duration-300"
               >
                 View Details
               </Link>
