@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Heart, X, ChevronUp, Sparkles } from 'lucide-react';
+import { 
+  Search, 
+  Filter, 
+  ChevronDown, 
+  Heart, 
+  X, 
+  ChevronUp, 
+  Sparkles, 
+  Tag, 
+  Briefcase, 
+  Sliders, 
+  RotateCcw 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
@@ -214,7 +226,7 @@ const Marketplace: React.FC = () => {
             onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
             type="button"
           >
-            <Filter className="h-5 w-5" />
+            <Sliders className="h-5 w-5" />
             <span>Filters</span>
             <ChevronDown className={`h-4 w-4 transition-transform ${isMobileFilterOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -231,7 +243,10 @@ const Marketplace: React.FC = () => {
               transition={{ duration: 0.3 }}
             >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Filters</h3>
+                <div className="flex items-center gap-2">
+                  <Sliders className="h-5 w-5 text-primary-400" />
+                  <h3 className="text-lg font-medium">Filters</h3>
+                </div>
                 <button 
                   onClick={() => setIsMobileFilterOpen(false)}
                   className="text-gray-400 hover:text-white"
@@ -259,7 +274,12 @@ const Marketplace: React.FC = () => {
           <div className={`hidden lg:block ${isFilterSidebarCollapsed ? 'w-12' : 'w-64'} shrink-0 transition-all duration-300`}>
             <div className="sticky top-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden transition-all duration-300">
               <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                {!isFilterSidebarCollapsed && <h3 className="text-lg font-medium">Filters</h3>}
+                {!isFilterSidebarCollapsed && (
+                  <div className="flex items-center gap-2">
+                    <Sliders className="h-5 w-5 text-primary-400" />
+                    <h3 className="text-lg font-medium">Filters</h3>
+                  </div>
+                )}
                 <button 
                   onClick={() => setIsFilterSidebarCollapsed(!isFilterSidebarCollapsed)}
                   className={`text-gray-400 hover:text-white flex items-center ${isFilterSidebarCollapsed ? 'mx-auto' : ''}`}
@@ -267,7 +287,7 @@ const Marketplace: React.FC = () => {
                   type="button"
                 >
                   {isFilterSidebarCollapsed ? (
-                    <Filter className="h-5 w-5" />
+                    <Sliders className="h-5 w-5" />
                   ) : (
                     <ChevronLeft className="h-5 w-5" />
                   )}
@@ -320,6 +340,7 @@ const Marketplace: React.FC = () => {
               <div className="mb-6 flex flex-wrap gap-2">
                 {selectedCategory && (
                   <div className="bg-gray-800 rounded-full px-3 py-1 text-sm flex items-center gap-2">
+                    <Tag className="h-3.5 w-3.5 text-primary-400" />
                     <span>Category: {selectedCategory}</span>
                     <button 
                       onClick={() => setSelectedCategory(null)}
@@ -333,6 +354,7 @@ const Marketplace: React.FC = () => {
                 
                 {selectedUseCases.map(useCase => (
                   <div key={useCase} className="bg-gray-800 rounded-full px-3 py-1 text-sm flex items-center gap-2">
+                    <Briefcase className="h-3.5 w-3.5 text-primary-400" />
                     <span>{useCase}</span>
                     <button 
                       onClick={() => toggleUseCase(useCase)}
@@ -346,10 +368,11 @@ const Marketplace: React.FC = () => {
                 
                 <button 
                   onClick={resetFilters}
-                  className="text-primary-400 hover:text-primary-300 text-sm"
+                  className="text-primary-400 hover:text-primary-300 text-sm flex items-center gap-1"
                   type="button"
                 >
-                  Clear all filters
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  <span>Clear all filters</span>
                 </button>
               </div>
             )}
@@ -372,7 +395,7 @@ const Marketplace: React.FC = () => {
                     <Link to={`/agent/${agent.id}`} className="block h-full flex flex-col">
                       <div className="relative">
                         {/* Standardized image container with fixed aspect ratio */}
-                        <div className="w-full aspect-video overflow-hidden">
+                        <div className="w-full aspect-[16/9] overflow-hidden">
                           <img 
                             src={agent.image} 
                             alt={agent.name} 
@@ -396,10 +419,10 @@ const Marketplace: React.FC = () => {
                       </div>
                       
                       <div className="p-5 flex-grow flex flex-col">
-                        <p className="text-gray-300 text-sm mb-4">{agent.description}</p>
+                        <p className="text-gray-300 text-sm mb-4 line-clamp-2 h-10">{agent.description}</p>
                         
                         {/* Capabilities */}
-                        <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="flex flex-wrap gap-2 mb-4 min-h-[32px]">
                           {agent.capabilities.slice(0, 3).map((capability, i) => (
                             <span key={i} className="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded-full">
                               {capability}
@@ -450,11 +473,12 @@ const Marketplace: React.FC = () => {
                 <h3 className="text-xl font-medium mb-2">No agents found</h3>
                 <p className="text-gray-400">Try adjusting your filters or search query</p>
                 <button 
-                  className="mt-4 px-4 py-2 bg-primary-500 hover:bg-primary-600 rounded-lg text-white transition"
+                  className="mt-4 px-4 py-2 bg-primary-500 hover:bg-primary-600 rounded-lg text-white transition flex items-center gap-2 mx-auto"
                   onClick={resetFilters}
                   type="button"
                 >
-                  Reset Filters
+                  <RotateCcw className="h-4 w-4" />
+                  <span>Reset Filters</span>
                 </button>
               </div>
             )}
@@ -486,8 +510,8 @@ const FilterContent: React.FC<FilterContentProps> = ({
   resetFilters
 }) => {
   const [expandedSections, setExpandedSections] = useState({
-    categories: false,
-    useCases: false
+    categories: true, // Set to true by default for better UX
+    useCases: true    // Set to true by default for better UX
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -506,7 +530,10 @@ const FilterContent: React.FC<FilterContentProps> = ({
           onClick={() => toggleSection('categories')}
           type="button"
         >
-          <h4 className="text-md font-medium">Categories</h4>
+          <div className="flex items-center gap-2">
+            <Tag className="h-4 w-4 text-primary-400" />
+            <h4 className="text-md font-medium">Categories</h4>
+          </div>
           {expandedSections.categories ? (
             <ChevronUp className="h-4 w-4 text-gray-400" />
           ) : (
@@ -559,7 +586,10 @@ const FilterContent: React.FC<FilterContentProps> = ({
           onClick={() => toggleSection('useCases')}
           type="button"
         >
-          <h4 className="text-md font-medium">Use Cases</h4>
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-4 w-4 text-primary-400" />
+            <h4 className="text-md font-medium">Use Cases</h4>
+          </div>
           {expandedSections.useCases ? (
             <ChevronUp className="h-4 w-4 text-gray-400" />
           ) : (
@@ -598,11 +628,12 @@ const FilterContent: React.FC<FilterContentProps> = ({
       
       {/* Reset button */}
       <button 
-        className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition"
+        className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition flex items-center justify-center gap-2"
         onClick={resetFilters}
         type="button"
       >
-        Reset All Filters
+        <RotateCcw className="h-4 w-4" />
+        <span>Reset All Filters</span>
       </button>
     </div>
   );
