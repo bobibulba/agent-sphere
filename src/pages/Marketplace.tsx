@@ -510,8 +510,8 @@ const FilterContent: React.FC<FilterContentProps> = ({
   resetFilters
 }) => {
   const [expandedSections, setExpandedSections] = useState({
-    categories: true, // Set to true by default for better UX
-    useCases: true    // Set to true by default for better UX
+    categories: false, // Changed to false to be minimized by default
+    useCases: false    // Changed to false to be minimized by default
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
