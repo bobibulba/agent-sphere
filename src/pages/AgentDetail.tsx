@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { useParams,<pivotalAction type="file" filePath="src/pages/AgentDetail.tsx">import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
-  Star, 
-  Share2, 
   Heart, 
+  Share2, 
   ShoppingCart, 
   Bot, 
   Check, 
@@ -21,6 +21,7 @@ import { Agent } from '../types';
 const AgentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'related'>('overview');
+  const [isLiked, setIsLiked] = useState(false);
   
   // Find the agent from our data
   const agent = [...featuredAgents, ...trendingAgents].find(a => a.id === id);
@@ -44,6 +45,10 @@ const AgentDetail: React.FC = () => {
   // Calculate USD value (mock conversion)
   const ethPrice = 1800; // Mock ETH price in USD
   const usdValue = parseFloat(agent.price) * ethPrice;
+
+  const handleLikeToggle = () => {
+    setIsLiked(!isLiked);
+  };
 
   return (
     <div className="bg-gray-900 text-white">
@@ -132,8 +137,12 @@ const AgentDetail: React.FC = () => {
                     <span>Buy Now</span>
                   </button>
                   
-                  <button className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
-                    <Heart className="h-5 w-5 text-gray-300" />
+                  <button 
+                    className={`p-3 ${isLiked ? 'bg-rose-500' : 'bg-gray-700 hover:bg-gray-600'} rounded-lg transition`}
+                    onClick={handleLikeToggle}
+                    aria-label={isLiked ? "Unlike" : "Like"}
+                  >
+                    <Heart className={`h-5 w-5 ${isLiked ? 'text-white fill-current' : 'text-gray-300'}`} />
                   </button>
                   
                   <button className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
@@ -149,10 +158,10 @@ const AgentDetail: React.FC = () => {
                   <div className="text-xl font-bold">{agent.reviewCount * 3}</div>
                 </div>
                 <div className="bg-gray-800 rounded-lg p-4 text-center">
-                  <div className="text-gray-400 text-sm mb-1">Rating</div>
+                  <div className="text-gray-400 text-sm mb-1">Likes</div>
                   <div className="text-xl font-bold flex items-center justify-center">
-                    <span>{agent.rating}</span>
-                    <Star className="h-4 w-4 text-yellow-400 ml-1 fill-current" />
+                    <span>{agent.likes}</span>
+                    <Heart className={`h-4 w-4 text-rose-400 ml-1 ${isLiked ? 'fill-current' : ''}`} />
                   </div>
                 </div>
                 <div className="bg-gray-800 rounded-lg p-4 text-center">
@@ -370,14 +379,10 @@ const AgentDetail: React.FC = () => {
                     
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-gray-300 mb-2">Rating</label>
-                        <div className="flex space-x-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <button key={star} className="text-yellow-400">
-                              <Star className="h-6 w-6 fill-current" />
-                            </button>
-                          ))}
-                        </div>
+                        <label className="block text-gray-300 mb-2">Did you like this agent?</label>
+                        <button className="bg-gray-700 hover:bg-rose-500 text-white p-2 rounded-lg transition-colors duration-300">
+                          <Heart className="h-6 w-6" />
+                        </button>
                       </div>
                       
                       <div>
@@ -417,13 +422,8 @@ const AgentDetail: React.FC = () => {
                             </div>
                           </div>
                           
-                          <div className="flex text-yellow-400">
-                            {[...Array(5)].map((_, starIndex) => (
-                              <Star 
-                                key={starIndex} 
-                                className={`h-4 w-4 ${starIndex < 5 - i ? 'fill-current' : ''}`}
-                              />
-                            ))}
+                          <div className="text-rose-400">
+                            <Heart className="h-5 w-5 fill-current" />
                           </div>
                         </div>
                         
@@ -438,44 +438,58 @@ const AgentDetail: React.FC = () => {
                 </div>
                 
                 <div className="lg:col-span-1">
-                  {/* Rating Summary */}
+                  {/* Likes Summary */}
                   <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-6">
-                    <h3 className="text-lg font-semibold mb-4">Rating Summary</h3>
+                    <h3 className="text-lg font-semibold mb-4">Engagement Summary</h3>
                     
                     <div className="flex items-center mb-6">
-                      <div className="text-4xl font-bold text-white mr-4">{agent.rating}</div>
+                      <div className="text-4xl font-bold text-white mr-4">{agent.likes}</div>
                       <div>
-                        <div className="flex text-yellow-400 mb-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`h-5 w-5 ${i < Math.floor(agent.rating) ? 'fill-current' : ''}`}
-                            />
-                          ))}
+                        <div className="flex text-rose-400 mb-1">
+                          <Heart className="h-5 w-5 fill-current" />
                         </div>
-                        <div className="text-gray-400 text-sm">{agent.reviewCount} reviews</div>
+                        <div className="text-gray-400 text-sm">Total likes</div>
                       </div>
                     </div>
                     
-                    {/* Rating Bars */}
-                    <div className="space-y-2">
-                      {[5, 4, 3, 2, 1].map((rating) => (
-                        <div key={rating} className="flex items-center">
-                          <div className="text-gray-400 text-sm w-8">{rating}</div>
-                          <Star className="h-4 w-4 text-yellow-400 fill-current mr-2" />
-                          <div className="w-full bg-gray-700 rounded-full h-2 mr-2">
-                            <div 
-                              className="bg-yellow-400 h-2 rounded-full" 
-                              style={{ 
-                                width: `${rating === 5 ? 70 : rating === 4 ? 20 : rating === 3 ? 5 : rating === 2 ? 3 : 2}%` 
-                              }}
-                            ></div>
-                          </div>
-                          <div className="text-gray-400 text-sm w-8">
-                            {rating === 5 ? '70%' : rating === 4 ? '20%' : rating === 3 ? '5%' : rating === 2 ? '3%' : '2%'}
-                          </div>
-                        </div>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Positive reviews</span>
+                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.92)}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Neutral reviews</span>
+                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.05)}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-400">Critical reviews</span>
+                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.03)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Popular tags */}
+                  <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                    <h3 className="text-lg font-semibold mb-4">Popular Tags</h3>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {agent.tags.map((tag, i) => (
+                        <Link 
+                          key={i}
+                          to={`/search?tag=${tag}`}
+                          className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full text-sm transition"
+                        >
+                          {tag}
+                        </Link>
                       ))}
+                      <Link 
+                        to={`/search?category=${agent.category}`}
+                        className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-3 py-1.5 rounded-full text-sm transition"
+                      >
+                        {agent.category}
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -508,9 +522,9 @@ const AgentDetail: React.FC = () => {
                       <div className="p-5">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="text-lg font-semibold text-white">{relatedAgent.name}</h3>
-                          <div className="flex items-center space-x-1 text-yellow-400">
-                            <Star className="h-4 w-4 fill-current" />
-                            <span className="text-sm">{relatedAgent.rating}</span>
+                          <div className="flex items-center space-x-1 text-rose-400">
+                            <Heart className="h-4 w-4 fill-current" />
+                            <span className="text-sm">{relatedAgent.likes}</span>
                           </div>
                         </div>
                         

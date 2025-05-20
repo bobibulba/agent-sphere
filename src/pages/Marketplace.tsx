@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Star, ArrowUpDown, X, ChevronUp, ChevronRight, Sparkles } from 'lucide-react';
+import { Search, Filter, ChevronDown, Heart, ArrowUpDown, X, ChevronUp, ChevronRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
@@ -11,8 +11,8 @@ const Marketplace: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1]);
-  const [minRating, setMinRating] = useState<number>(0);
-  const [sortBy, setSortBy] = useState<'popular' | 'price' | 'rating' | 'newest'>('popular');
+  const [minLikes, setMinLikes] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<'popular' | 'price' | 'mostLiked' | 'newest'>('popular');
   const [selectedUseCases, setSelectedUseCases] = useState<string[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isFilterSidebarCollapsed, setIsFilterSidebarCollapsed] = useState(false);
@@ -53,9 +53,9 @@ const Marketplace: React.FC = () => {
       return price >= priceRange[0] && price <= priceRange[1];
     });
     
-    // Filter by rating
-    if (minRating > 0) {
-      results = results.filter(agent => agent.rating >= minRating);
+    // Filter by likes
+    if (minLikes > 0) {
+      results = results.filter(agent => agent.likes >= minLikes);
     }
 
     // Filter by use cases
@@ -72,8 +72,8 @@ const Marketplace: React.FC = () => {
       case 'price':
         results = [...results].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         break;
-      case 'rating':
-        results = [...results].sort((a, b) => b.rating - a.rating);
+      case 'mostLiked':
+        results = [...results].sort((a, b) => b.likes - a.likes);
         break;
       case 'newest':
         results = [...results].sort((a, b) => 
@@ -87,13 +87,13 @@ const Marketplace: React.FC = () => {
     }
     
     setFilteredAgents(results);
-  }, [agents, searchQuery, selectedCategory, priceRange, minRating, sortBy, selectedUseCases]);
+  }, [agents, searchQuery, selectedCategory, priceRange, minLikes, sortBy, selectedUseCases]);
 
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory(null);
     setPriceRange([0, 1]);
-    setMinRating(0);
+    setMinLikes(0);
     setSortBy('popular');
     setSelectedUseCases([]);
   };
@@ -234,8 +234,8 @@ const Marketplace: React.FC = () => {
                 setSelectedCategory={setSelectedCategory}
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
-                minRating={minRating}
-                setMinRating={setMinRating}
+                minLikes={minLikes}
+                setMinLikes={setMinLikes}
                 useCases={useCases}
                 selectedUseCases={selectedUseCases}
                 toggleUseCase={toggleUseCase}
@@ -275,8 +275,8 @@ const Marketplace: React.FC = () => {
                     setSelectedCategory={setSelectedCategory}
                     priceRange={priceRange}
                     setPriceRange={setPriceRange}
-                    minRating={minRating}
-                    setMinRating={setMinRating}
+                    minLikes={minLikes}
+                    setMinLikes={setMinLikes}
                     useCases={useCases}
                     selectedUseCases={selectedUseCases}
                     toggleUseCase={toggleUseCase}
@@ -306,14 +306,14 @@ const Marketplace: React.FC = () => {
                 >
                   <option value="popular">Most Popular</option>
                   <option value="price">Price: Low to High</option>
-                  <option value="rating">Highest Rated</option>
+                  <option value="mostLiked">Most Liked</option>
                   <option value="newest">Newest</option>
                 </select>
               </div>
             </div>
             
             {/* Active filters */}
-            {(selectedCategory || minRating > 0 || selectedUseCases.length > 0) && (
+            {(selectedCategory || minLikes > 0 || selectedUseCases.length > 0) && (
               <div className="mb-6 flex flex-wrap gap-2">
                 {selectedCategory && (
                   <div className="bg-gray-800 rounded-full px-3 py-1 text-sm flex items-center gap-2">
@@ -327,11 +327,11 @@ const Marketplace: React.FC = () => {
                   </div>
                 )}
                 
-                {minRating > 0 && (
+                {minLikes > 0 && (
                   <div className="bg-gray-800 rounded-full px-3 py-1 text-sm flex items-center gap-2">
-                    <span>Rating: {minRating}+ stars</span>
+                    <span>Min Likes: {minLikes}+</span>
                     <button 
-                      onClick={() => setMinRating(0)}
+                      onClick={() => setMinLikes(0)}
                       className="text-gray-400 hover:text-white"
                     >
                       <X className="h-4 w-4" />
@@ -389,9 +389,9 @@ const Marketplace: React.FC = () => {
                     <div className="p-5">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="text-xl font-semibold">{agent.name}</h3>
-                        <div className="flex items-center space-x-1 text-yellow-400">
-                          <Star className="h-4 w-4 fill-current" />
-                          <span>{agent.rating.toFixed(1)}</span>
+                        <div className="flex items-center space-x-1 text-rose-400">
+                          <Heart className={`h-4 w-4 ${agent.likes > 0 ? 'fill-current' : ''}`} />
+                          <span>{agent.likes}</span>
                         </div>
                       </div>
                       
@@ -448,8 +448,8 @@ interface FilterContentProps {
   setSelectedCategory: (category: string | null) => void;
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
-  minRating: number;
-  setMinRating: (rating: number) => void;
+  minLikes: number;
+  setMinLikes: (likes: number) => void;
   useCases: string[];
   selectedUseCases: string[];
   toggleUseCase: (useCase: string) => void;
@@ -462,8 +462,8 @@ const FilterContent: React.FC<FilterContentProps> = ({
   setSelectedCategory,
   priceRange,
   setPriceRange,
-  minRating,
-  setMinRating,
+  minLikes,
+  setMinLikes,
   useCases,
   selectedUseCases,
   toggleUseCase,
@@ -472,7 +472,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
   const [expandedSections, setExpandedSections] = useState({
     priceRange: true,
     categories: true,
-    rating: true,
+    likes: true,
     useCases: true
   });
 
@@ -579,14 +579,14 @@ const FilterContent: React.FC<FilterContentProps> = ({
         </AnimatePresence>
       </div>
       
-      {/* Minimum Rating */}
+      {/* Minimum Likes */}
       <div className="border-b border-gray-700 pb-4">
         <button 
           className="flex items-center justify-between w-full text-left mb-2"
-          onClick={() => toggleSection('rating')}
+          onClick={() => toggleSection('likes')}
         >
-          <h4 className="text-md font-medium">Minimum Rating</h4>
-          {expandedSections.rating ? (
+          <h4 className="text-md font-medium">Minimum Likes</h4>
+          {expandedSections.likes ? (
             <ChevronUp className="h-4 w-4 text-gray-400" />
           ) : (
             <ChevronDown className="h-4 w-4 text-gray-400" />
@@ -594,7 +594,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
         </button>
         
         <AnimatePresence>
-          {expandedSections.rating && (
+          {expandedSections.likes && (
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -602,24 +602,30 @@ const FilterContent: React.FC<FilterContentProps> = ({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="flex items-center space-x-1 mt-3">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <button
-                    key={rating}
-                    className={`p-1.5 rounded-md ${
-                      minRating >= rating ? 'text-yellow-400' : 'text-gray-500'
-                    }`}
-                    onClick={() => setMinRating(rating === minRating ? 0 : rating)}
-                  >
-                    <Star className="h-5 w-5 fill-current" />
-                  </button>
+              <div className="space-y-2 mt-3">
+                {[50, 100, 150, 200, 250].map((likes) => (
+                  <div key={likes} className="flex items-center">
+                    <button
+                      className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                        minLikes === likes 
+                          ? 'bg-rose-500 bg-opacity-20 text-rose-400' 
+                          : 'hover:bg-gray-700 text-gray-300'
+                      }`}
+                      onClick={() => setMinLikes(minLikes === likes ? 0 : likes)}
+                    >
+                      <div className="flex items-center">
+                        <Heart className={`h-4 w-4 mr-2 ${minLikes === likes ? 'fill-rose-400 text-rose-400' : ''}`} />
+                        <span>{likes}+ likes</span>
+                      </div>
+                    </button>
+                  </div>
                 ))}
-                {minRating > 0 && (
+                {minLikes > 0 && minLikes !== 50 && minLikes !== 100 && minLikes !== 150 && minLikes !== 200 && minLikes !== 250 && (
                   <button 
                     className="ml-2 text-xs text-gray-400 hover:text-white"
-                    onClick={() => setMinRating(0)}
+                    onClick={() => setMinLikes(0)}
                   >
-                    Clear
+                    Clear ({minLikes}+ likes)
                   </button>
                 )}
               </div>

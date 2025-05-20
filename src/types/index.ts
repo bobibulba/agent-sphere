@@ -5,7 +5,7 @@ export interface Agent {
   image: string;
   category: string;
   price: string;
-  rating: number;
+  likes: number; // Changed from rating
   reviewCount: number;
   creator: string;
   createdAt: string;
@@ -28,7 +28,7 @@ export interface Review {
   id: string;
   user: string;
   avatar: string;
-  rating: number;
+  liked: boolean; // Changed from rating
   date: string;
   comment: string;
 }
@@ -46,7 +46,6 @@ export interface SearchFilters {
   category?: string;
   priceMin?: number;
   priceMax?: number;
-  rating?: number;
+  sortBy?: 'popular' | 'price' | 'newest' | 'mostLiked'; // Changed rating to mostLiked
   capabilities?: string[];
-  sortBy?: 'popular' | 'price' | 'rating' | 'newest';
 }

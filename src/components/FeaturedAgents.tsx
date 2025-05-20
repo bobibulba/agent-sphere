@@ -1,6 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { Agent } from '../types';
+import { motion } from 'framer-motion';
+
+interface FeaturedAgentsProps {
+  agents: Agent[];
+  title: string;
+  subtitle: string;
+  linkText: string;
+  linkUrl: string;
+}
+
+const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({ 
+  agents, 
+  title, 
+  subtitle, 
+  linkText, 
+  linkUrl 
+}) => {
+  const [startIndex, setStartIndex] = React.useState(0);
+  const itemsToShow = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
+  
+  // Auto-slide effect
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setStartIndex((prevIndex) => 
+        (prevIndex + 1) % (Math.max(0, agents.length - itemsToShow + 1))
+      );
+    }, 7000);
+    
+    return () => clearInterval(interval);
+  }, [agents.length, itemsToShow]);
+
+  const handlePrev = () => {
+    setStartIndex((prevIndex) => 
+      Math.max(0, prevIndex - 1)
+    );
+  };
+
+  const handleNext = () => {
+    setStart<pivotalArtifact id="update-rating-to-likes" title="Update Rating System to Likes">
+<pivotalAction type="file" filePath="src/components/FeaturedAgents.tsx">import React from 'react';
+import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Agent } from '../types';
 import { motion } from 'framer-motion';
 
@@ -120,9 +163,9 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
                   <div className="p-5 flex-grow flex flex-col">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
-                      <div className="flex items-center space-x-1 text-yellow-400">
-                        <Star className="h-4 w-4 fill-current" />
-                        <span className="text-sm">{agent.rating}</span>
+                      <div className="flex items-center space-x-1 text-rose-400">
+                        <Heart className={`h-4 w-4 ${agent.isLiked ? 'fill-current' : ''}`} />
+                        <span className="text-sm">{agent.likes}</span>
                       </div>
                     </div>
                     

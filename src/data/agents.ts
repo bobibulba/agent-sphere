@@ -8,7 +8,7 @@ export const featuredAgents: Agent[] = [
     creator: "ChatAndBuild Labs",
     image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.25",
-    rating: 4.9,
+    likes: 342, // Changed from rating
     reviewCount: 342,
     category: "Development",
     capabilities: ["Code completion", "Bug detection", "Refactoring", "Documentation"],
@@ -40,7 +40,7 @@ export const featuredAgents: Agent[] = [
     creator: "PixelPerfect Studios",
     image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.35",
-    rating: 4.8,
+    likes: 256, // Changed from rating
     reviewCount: 256,
     category: "Design",
     capabilities: ["Wireframing", "Color palette", "Components", "Responsive design"],
@@ -72,7 +72,7 @@ export const featuredAgents: Agent[] = [
     creator: "AnalyticsPro",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.45",
-    rating: 4.7,
+    likes: 189, // Changed from rating
     reviewCount: 189,
     category: "Analytics",
     capabilities: ["Data cleaning", "Analysis", "Visualization", "Reporting"],
@@ -104,7 +104,7 @@ export const featuredAgents: Agent[] = [
     creator: "WordSmith AI",
     image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.30",
-    rating: 4.6,
+    likes: 215, // Changed from rating
     reviewCount: 215,
     category: "Content",
     capabilities: ["Blog writing", "Social media", "Email campaigns", "SEO optimization"],
@@ -136,7 +136,7 @@ export const featuredAgents: Agent[] = [
     creator: "QuantEdge",
     image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.55",
-    rating: 4.8,
+    likes: 176, // Changed from rating
     reviewCount: 176,
     category: "Finance",
     capabilities: ["Market analysis", "Portfolio management", "Risk assessment", "Financial planning"],
@@ -168,7 +168,7 @@ export const featuredAgents: Agent[] = [
     creator: "LawTech Solutions",
     image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.50",
-    rating: 4.7,
+    likes: 142, // Changed from rating
     reviewCount: 142,
     category: "Legal",
     capabilities: ["Contract review", "Compliance checking", "Risk identification", "Document drafting"],
@@ -203,7 +203,7 @@ export const trendingAgents: Agent[] = [
     creator: "MediaLabs",
     image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.40",
-    rating: 4.8,
+    likes: 198, // Changed from rating
     reviewCount: 198,
     category: "Media",
     capabilities: ["Video editing", "Scene suggestions", "Transitions", "Effects"],
@@ -235,7 +235,7 @@ export const trendingAgents: Agent[] = [
     creator: "WellnessAI",
     image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.35",
-    rating: 4.9,
+    likes: 267, // Changed from rating
     reviewCount: 267,
     category: "Health",
     capabilities: ["Nutrition planning", "Workout routines", "Health tracking", "Habit formation"],
@@ -267,7 +267,7 @@ export const trendingAgents: Agent[] = [
     creator: "WanderWise",
     image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.30",
-    rating: 4.7,
+    likes: 221, // Changed from rating
     reviewCount: 221,
     category: "Travel",
     capabilities: ["Itinerary planning", "Booking assistance", "Local recommendations", "Budget management"],
@@ -299,7 +299,7 @@ export const trendingAgents: Agent[] = [
     creator: "SonicLabs",
     image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.45",
-    rating: 4.8,
+    likes: 178, // Changed from rating
     reviewCount: 178,
     category: "Music",
     capabilities: ["Melody generation", "Chord progressions", "Arrangement", "Mixing assistance"],
@@ -331,7 +331,7 @@ export const trendingAgents: Agent[] = [
     creator: "LearnSmart",
     image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.35",
-    rating: 4.9,
+    likes: 312, // Changed from rating
     reviewCount: 312,
     category: "Education",
     capabilities: ["Personalized tutoring", "Interactive lessons", "Progress tracking", "Adaptive learning"],
@@ -363,7 +363,7 @@ export const trendingAgents: Agent[] = [
     creator: "PixelForge",
     image: "https://images.unsplash.com/photo-1556438064-2d7646166914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
     price: "0.50",
-    rating: 4.7,
+    likes: 156, // Changed from rating
     reviewCount: 156,
     category: "Gaming",
     capabilities: ["Level design", "Character creation", "Gameplay mechanics", "Narrative development"],
