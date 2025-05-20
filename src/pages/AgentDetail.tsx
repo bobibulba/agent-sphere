@@ -19,7 +19,7 @@ import { Agent } from '../types';
 
 const AgentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'related'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'related'>('overview');
   const [isLiked, setIsLiked] = useState(false);
   
   // Find the agent from our data
@@ -52,14 +52,12 @@ const AgentDetail: React.FC = () => {
   return (
     <div className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Breadcrumb */}
+        {/* Breadcrumb - Updated to Home / Marketplace / Agent Name */}
         <div className="mb-8">
           <nav className="flex items-center space-x-2 text-sm text-gray-400">
             <Link to="/" className="hover:text-white transition">Home</Link>
             <span>/</span>
             <Link to="/marketplace" className="hover:text-white transition">Marketplace</Link>
-            <span>/</span>
-            <Link to={`/category/${agent.category.toLowerCase()}`} className="hover:text-white transition">{agent.category}</Link>
             <span>/</span>
             <span className="text-gray-300">{agent.name}</span>
           </nav>
@@ -80,21 +78,16 @@ const AgentDetail: React.FC = () => {
                 alt={agent.name} 
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-4 left-4 flex flex-wrap gap-2 max-w-[80%]">
+              <div className="absolute top-4 left-4">
                 <span className="bg-blue-500/80 text-white text-xs font-medium px-2.5 py-1 rounded-full">
                   {agent.category}
                 </span>
-                {agent.tags.slice(0, 2).map((tag, i) => (
-                  <span key={i} className="bg-gray-800/80 text-gray-200 text-xs font-medium px-2.5 py-1 rounded-full">
-                    #{tag}
-                  </span>
-                ))}
               </div>
             </div>
             
             {/* Tags below image */}
             <div className="flex flex-wrap gap-2 mt-4">
-              {agent.tags.slice(2).map((tag, i) => (
+              {agent.tags.map((tag, i) => (
                 <Link 
                   key={i} 
                   to={`/search?tag=${tag}`}
@@ -150,12 +143,8 @@ const AgentDetail: React.FC = () => {
                 </div>
               </div>
               
-              {/* Agent Stats */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
-                  <div className="text-gray-400 text-sm mb-1">Purchases</div>
-                  <div className="text-xl font-bold">{agent.reviewCount * 3}</div>
-                </div>
+              {/* Agent Stats - Removed purchases, kept only likes and last updated */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-800 rounded-lg p-4 text-center">
                   <div className="text-gray-400 text-sm mb-1">Likes</div>
                   <div className="text-xl font-bold flex items-center justify-center">
@@ -172,7 +161,7 @@ const AgentDetail: React.FC = () => {
           </motion.div>
         </div>
         
-        {/* Tabs */}
+        {/* Tabs - Removed reviews tab */}
         <div className="border-b border-gray-800 mb-8">
           <div className="flex overflow-x-auto">
             <button 
@@ -184,16 +173,6 @@ const AgentDetail: React.FC = () => {
               onClick={() => setActiveTab('overview')}
             >
               Overview
-            </button>
-            <button 
-              className={`px-6 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition ${
-                activeTab === 'reviews' 
-                  ? 'border-blue-500 text-blue-400' 
-                  : 'border-transparent text-gray-400 hover:text-gray-300'
-              }`}
-              onClick={() => setActiveTab('reviews')}
-            >
-              Reviews ({agent.reviewCount})
             </button>
             <button 
               className={`px-6 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition ${
@@ -357,139 +336,6 @@ const AgentDetail: React.FC = () => {
                       <Shield className="h-4 w-4" />
                       <span>Report Issue</span>
                     </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          
-          {activeTab === 'reviews' && (
-            <motion.div 
-              className="space-y-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Review Form */}
-                  <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                    <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-gray-300 mb-2">Did you like this agent?</label>
-                        <button className="bg-gray-700 hover:bg-rose-500 text-white p-2 rounded-lg transition-colors duration-300">
-                          <Heart className="h-6 w-6" />
-                        </button>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-gray-300 mb-2">Review</label>
-                        <textarea 
-                          className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          rows={4}
-                          placeholder="Share your experience with this agent..."
-                        ></textarea>
-                      </div>
-                      
-                      <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition">
-                        Submit Review
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Reviews List */}
-                  <div className="space-y-6">
-                    {/* Sample reviews */}
-                    {[...Array(3)].map((_, i) => (
-                      <div key={i} className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                        <div className="flex justify-between mb-3">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gray-700 rounded-full overflow-hidden">
-                              <img 
-                                src={`https://ui-avatars.com/api/?name=User${i+1}&background=random`} 
-                                alt={`User ${i+1}`} 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div>
-                              <div className="font-medium">User{i+1}</div>
-                              <div className="text-gray-400 text-xs">
-                                {new Date(Date.now() - (i * 86400000)).toLocaleDateString()}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="text-rose-400">
-                            <Heart className="h-5 w-5 fill-current" />
-                          </div>
-                        </div>
-                        
-                        <p className="text-gray-300">
-                          {i === 0 && "This agent is incredible! It helped me solve complex problems in minutes that would have taken hours manually. The outputs are clean and ready to use."}
-                          {i === 1 && "Very useful for my daily tasks. I've been using it for a few weeks and it has saved me so much time. Highly recommended!"}
-                          {i === 2 && "Good agent overall, but sometimes the responses could be more detailed. Still, it's worth the price for what it offers."}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="lg:col-span-1">
-                  {/* Likes Summary */}
-                  <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 mb-6">
-                    <h3 className="text-lg font-semibold mb-4">Engagement Summary</h3>
-                    
-                    <div className="flex items-center mb-6">
-                      <div className="text-4xl font-bold text-white mr-4">{agent.likes}</div>
-                      <div>
-                        <div className="flex text-rose-400 mb-1">
-                          <Heart className="h-5 w-5 fill-current" />
-                        </div>
-                        <div className="text-gray-400 text-sm">Total likes</div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Positive reviews</span>
-                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.92)}</span>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Neutral reviews</span>
-                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.05)}</span>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-400">Critical reviews</span>
-                        <span className="text-white font-medium">{Math.round(agent.reviewCount * 0.03)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Popular tags */}
-                  <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-                    <h3 className="text-lg font-semibold mb-4">Popular Tags</h3>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {agent.tags.map((tag, i) => (
-                        <Link 
-                          key={i}
-                          to={`/search?tag=${tag}`}
-                          className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1.5 rounded-full text-sm transition"
-                        >
-                          {tag}
-                        </Link>
-                      ))}
-                      <Link 
-                        to={`/search?category=${agent.category}`}
-                        className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-3 py-1.5 rounded-full text-sm transition"
-                      >
-                        {agent.category}
-                      </Link>
-                    </div>
                   </div>
                 </div>
               </div>
