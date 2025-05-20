@@ -117,46 +117,45 @@ const AgentDetail: React.FC = () => {
                 </Link>
               </div>
               
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
-                <div>
-                  <div className="text-3xl font-bold text-white mb-1">{agent.price} ETH</div>
-                  <div className="text-gray-400 text-sm">≈ ${usdValue.toFixed(2)} USD</div>
+              <div className="p-6 bg-gray-800 rounded-xl border border-gray-700 mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-4">
+                  <div>
+                    <div className="text-3xl font-bold text-white mb-1">{agent.price} ETH</div>
+                    <div className="text-gray-400 text-sm">≈ ${usdValue.toFixed(2)} USD</div>
+                  </div>
+                  
+                  <div className="flex space-x-3">
+                    <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300">
+                      <ShoppingCart className="h-5 w-5" />
+                      <span>Buy Now</span>
+                    </button>
+                    
+                    <button 
+                      className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300"
+                      onClick={() => setShowOfferModal(true)}
+                    >
+                      <DollarSign className="h-5 w-5" />
+                      <span>Make Offer</span>
+                    </button>
+                  </div>
                 </div>
                 
-                <div className="flex space-x-3">
-                  <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300">
-                    <ShoppingCart className="h-5 w-5" />
-                    <span>Buy Now</span>
-                  </button>
+                {/* Like and Share buttons moved below the main buttons */}
+                <div className="flex items-center justify-end space-x-3 pt-3 border-t border-gray-700">
+                  <div className="flex items-center space-x-1 mr-2">
+                    <span className="text-gray-300 text-sm">{agent.likes}</span>
+                    <button 
+                      onClick={handleLikeToggle}
+                      className="flex items-center"
+                      aria-label={isLiked ? "Unlike" : "Like"}
+                    >
+                      <Heart className={`h-5 w-5 text-white ${isLiked ? 'fill-current' : ''}`} />
+                    </button>
+                  </div>
                   
-                  <button 
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300"
-                    onClick={() => setShowOfferModal(true)}
-                  >
-                    <DollarSign className="h-5 w-5" />
-                    <span>Make Offer</span>
-                  </button>
-                  
-                  <button 
-                    className={`p-3 ${isLiked ? 'bg-rose-500' : 'bg-gray-700 hover:bg-gray-600'} rounded-lg transition`}
-                    onClick={handleLikeToggle}
-                    aria-label={isLiked ? "Unlike" : "Like"}
-                  >
-                    <Heart className={`h-5 w-5 text-white ${isLiked ? 'fill-current' : ''}`} />
-                  </button>
-                  
-                  <button className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
+                  <button className="p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
                     <Share2 className="h-5 w-5 text-gray-300" />
                   </button>
-                </div>
-              </div>
-              
-              {/* Agent Stats - Simplified to only show likes */}
-              <div className="bg-gray-800 rounded-lg p-4 text-center mb-6">
-                <div className="text-gray-400 text-sm mb-1">Likes</div>
-                <div className="text-xl font-bold flex items-center justify-center">
-                  <span>{agent.likes}</span>
-                  <Heart className={`h-4 w-4 text-white ml-1 ${isLiked ? 'fill-current' : ''}`} />
                 </div>
               </div>
             </div>
@@ -428,7 +427,7 @@ const AgentDetail: React.FC = () => {
               <div className="flex space-x-3">
                 <button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-lg transition"
+                  className="flex-1 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition"
                 >
                   Submit Offer
                 </button>
