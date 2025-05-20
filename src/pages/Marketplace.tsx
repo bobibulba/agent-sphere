@@ -16,6 +16,7 @@ const Marketplace: React.FC = () => {
   const [selectedUseCases, setSelectedUseCases] = useState<string[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isFilterSidebarCollapsed, setIsFilterSidebarCollapsed] = useState(false);
+  const [likedAgents, setLikedAgents] = useState<Record<string, boolean>>({});
 
   // Common use cases for filtering
   const useCases = [
@@ -103,6 +104,30 @@ const Marketplace: React.FC = () => {
       prev.includes(useCase) 
         ? prev.filter(uc => uc !== useCase)
         : [...prev, useCase]
+    );
+  };
+
+  const handleLikeToggle = (agentId: string, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation to agent detail page
+    e.stopPropagation(); // Stop event propagation
+    
+    setLikedAgents(prev => {
+      const newLikedAgents = { ...prev };
+      newLikedAgents[agentId] = !prev[agentId];
+      return newLikedAgents;
+    });
+    
+    // Update agent likes count in the state
+    setAgents(prev => 
+      prev.map(agent => {
+        if (agent.id === agentId) {
+          return {
+            ...agent,
+            likes: likedAgents[agentId] ? agent.likes - 1 : agent.likes + 1
+          };
+        }
+        return agent;
+      })
     );
   };
 
@@ -375,49 +400,47 @@ const Marketplace: React.FC = () => {
                     variants={itemVariants}
                     whileHover={{ y: -5 }}
                   >
-                    <div className="aspect-w-16 aspect-h-9 relative">
-                      <img 
-                        src={agent.image} 
-                        alt={agent.name} 
-                        className="object-cover w-full h-full"
-                      />
-                      <div className="absolute top-2 right-2 bg-gray-900 bg-opacity-70 px-2 py-1 rounded-full text-sm font-medium">
-                        ${agent.price} / query
+                    <Link to={`/agent/${agent.id}`} className="block">
+                      <div className="aspect-w-16 aspect-h-9 relative">
+                        <img 
+                          src={agent.image} 
+                          alt={agent.name} 
+                          className="object-cover w-full h-full"
+                        />
                       </div>
-                    </div>
-                    
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl font-semibold">{agent.name}</h3>
-                        <div className="flex items-center space-x-1 text-rose-400">
-                          <Heart className={`h-4 w-4 ${agent.likes > 0 ? 'fill-current' : ''}`} />
-                          <span>{agent.likes}</span>
+                      
+                      <div className="p-5">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="text-xl font-semibold">{agent.name}</h3>
+                          <button 
+                            onClick={(e) => handleLikeToggle(agent.id, e)}
+                            className="flex items-center space-x-1 text-rose-400 hover:text-rose-300 transition-colors"
+                            aria-label={likedAgents[agent.id] ? "Unlike" : "Like"}
+                          >
+                            <Heart className={`h-5 w-5 ${likedAgents[agent.id] ? 'fill-current' : ''} transition-all duration-300 hover:scale-110`} />
+                            <span>{likedAgents[agent.id] ? agent.likes + 1 : agent.likes}</span>
+                          </button>
+                        </div>
+                        
+                        <p className="text-gray-400 text-sm mb-4">{agent.description}</p>
+                        
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {agent.tags.map((tag, index) => (
+                            <span 
+                              key={index} 
+                              className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-400">By {agent.creator}</span>
+                          <span className="text-sm font-medium text-white">${agent.price} ETH</span>
                         </div>
                       </div>
-                      
-                      <p className="text-gray-400 text-sm mb-4">{agent.description}</p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {agent.tags.map((tag, index) => (
-                          <span 
-                            key={index} 
-                            className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-400">By {agent.creator}</span>
-                        <Link 
-                          to={`/agent/${agent.id}`}
-                          className="px-3 py-1 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 rounded-full text-white text-sm font-medium transition"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
+                    </Link>
                   </motion.div>
                 ))}
               </motion.div>

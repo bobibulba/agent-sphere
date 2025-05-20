@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useParams,<pivotalAction type="file" filePath="src/pages/AgentDetail.tsx">import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
