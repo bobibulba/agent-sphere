@@ -40,49 +40,6 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
   };
 
   const handleNext = () => {
-    setStart<pivotalArtifact id="update-rating-to-likes" title="Update Rating System to Likes">
-<pivotalAction type="file" filePath="src/components/FeaturedAgents.tsx">import React from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
-import { Agent } from '../types';
-import { motion } from 'framer-motion';
-
-interface FeaturedAgentsProps {
-  agents: Agent[];
-  title: string;
-  subtitle: string;
-  linkText: string;
-  linkUrl: string;
-}
-
-const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({ 
-  agents, 
-  title, 
-  subtitle, 
-  linkText, 
-  linkUrl 
-}) => {
-  const [startIndex, setStartIndex] = React.useState(0);
-  const itemsToShow = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 4;
-  
-  // Auto-slide effect
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setStartIndex((prevIndex) => 
-        (prevIndex + 1) % (Math.max(0, agents.length - itemsToShow + 1))
-      );
-    }, 7000);
-    
-    return () => clearInterval(interval);
-  }, [agents.length, itemsToShow]);
-
-  const handlePrev = () => {
-    setStartIndex((prevIndex) => 
-      Math.max(0, prevIndex - 1)
-    );
-  };
-
-  const handleNext = () => {
     setStartIndex((prevIndex) => 
       Math.min(agents.length - itemsToShow, prevIndex + 1)
     );
@@ -158,17 +115,16 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
                     <div className="absolute top-2 right-2 bg-gray-900/80 text-white text-xs font-medium px-2 py-1 rounded-full">
                       {agent.category}
                     </div>
+                    
+                    {/* Added gradient overlay and creator info */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 p-4">
+                      <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
+                      <p className="text-gray-300 text-sm">by {agent.creator}</p>
+                    </div>
                   </div>
                   
                   <div className="p-5 flex-grow flex flex-col">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
-                      <div className="flex items-center space-x-1 text-rose-400">
-                        <Heart className={`h-4 w-4 ${agent.isLiked ? 'fill-current' : ''}`} />
-                        <span className="text-sm">{agent.likes}</span>
-                      </div>
-                    </div>
-                    
                     <p className="text-gray-400 text-sm mb-4 flex-grow">{agent.description}</p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -185,7 +141,10 @@ const FeaturedAgents: React.FC<FeaturedAgentsProps> = ({
                     </div>
                     
                     <div className="flex items-center justify-between pt-2 border-t border-gray-700">
-                      <span className="text-sm text-gray-400">by {agent.creator}</span>
+                      <div className="flex items-center space-x-1 text-rose-400">
+                        <Heart className={`h-4 w-4 ${agent.isLiked ? 'fill-current' : ''}`} />
+                        <span className="text-sm">{agent.likes}</span>
+                      </div>
                       <span className="text-lg font-bold text-white">{agent.price} ETH</span>
                     </div>
                     

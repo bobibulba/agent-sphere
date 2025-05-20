@@ -410,6 +410,7 @@ const Marketplace: React.FC = () => {
                               onClick={(e) => handleLikeToggle(agent.id, e)}
                               className="flex items-center space-x-1"
                               aria-label={likedAgents[agent.id] ? "Unlike" : "Like"}
+                              type="button"
                             >
                               <Heart className={`h-5 w-5 ${likedAgents[agent.id] ? 'fill-current' : ''}`} />
                               <span>{likedAgents[agent.id] ? agent.likes + 1 : agent.likes}</span>
@@ -418,13 +419,18 @@ const Marketplace: React.FC = () => {
                           <span className="text-lg font-bold text-white">{agent.price} ETH</span>
                         </div>
                         
-                        <Link 
-                          to={`/agent/${agent.id}`}
-                          className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-center transition"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          View Details
-                        </Link>
+                        <div className="mt-4 w-full">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              window.location.href = `/agent/${agent.id}`;
+                            }}
+                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-center transition"
+                            type="button"
+                          >
+                            View Details
+                          </button>
+                        </div>
                       </div>
                     </Link>
                   </motion.div>
@@ -489,6 +495,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
         <button 
           className="flex items-center justify-between w-full text-left mb-2"
           onClick={() => toggleSection('categories')}
+          type="button"
         >
           <h4 className="text-md font-medium">Categories</h4>
           {expandedSections.categories ? (
@@ -519,6 +526,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
                       onClick={() => setSelectedCategory(
                         selectedCategory === category.name ? null : category.name
                       )}
+                      type="button"
                     >
                       <div className="flex items-center justify-between">
                         <span>{category.name}</span>
@@ -540,6 +548,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
         <button 
           className="flex items-center justify-between w-full text-left mb-2"
           onClick={() => toggleSection('useCases')}
+          type="button"
         >
           <h4 className="text-md font-medium">Use Cases</h4>
           {expandedSections.useCases ? (
@@ -582,6 +591,7 @@ const FilterContent: React.FC<FilterContentProps> = ({
       <button 
         className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition"
         onClick={resetFilters}
+        type="button"
       >
         Reset All Filters
       </button>
