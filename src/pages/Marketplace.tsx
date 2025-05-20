@@ -10,7 +10,7 @@ const Marketplace: React.FC = () => {
   const [filteredAgents, setFilteredAgents] = useState<Agent[]>(agents);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'popular' | 'price' | 'mostLiked' | 'newest'>('popular');
+  const [sortBy, setSortBy] = useState<'priceLowToHigh' | 'priceHighToLow' | 'mostLiked' | 'newest'>('priceLowToHigh');
   const [selectedUseCases, setSelectedUseCases] = useState<string[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [isFilterSidebarCollapsed, setIsFilterSidebarCollapsed] = useState(true);
@@ -57,8 +57,11 @@ const Marketplace: React.FC = () => {
     
     // Sort results
     switch (sortBy) {
-      case 'price':
+      case 'priceLowToHigh':
         results = [...results].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        break;
+      case 'priceHighToLow':
+        results = [...results].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
         break;
       case 'mostLiked':
         results = [...results].sort((a, b) => b.likes - a.likes);
@@ -68,10 +71,6 @@ const Marketplace: React.FC = () => {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         break;
-      case 'popular':
-      default:
-        results = [...results].sort((a, b) => b.reviewCount - a.reviewCount);
-        break;
     }
     
     setFilteredAgents(results);
@@ -80,7 +79,7 @@ const Marketplace: React.FC = () => {
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory(null);
-    setSortBy('popular');
+    setSortBy('priceLowToHigh');
     setSelectedUseCases([]);
   };
 
@@ -303,8 +302,8 @@ const Marketplace: React.FC = () => {
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
                 >
-                  <option value="popular">Most Popular</option>
-                  <option value="price">Price: Low to High</option>
+                  <option value="priceLowToHigh">Price: Low to High</option>
+                  <option value="priceHighToLow">Price: High to Low</option>
                   <option value="mostLiked">Most Liked</option>
                   <option value="newest">Newest</option>
                 </select>
