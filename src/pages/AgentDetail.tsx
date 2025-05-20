@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Heart, 
@@ -12,11 +12,13 @@ import {
   Shield, 
   Users, 
   MessageSquare,
-  DollarSign
+  DollarSign,
+  Wallet
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { featuredAgents, trendingAgents } from '../data/agents';
 import { Agent } from '../types';
+import { useWeb3 } from '../context/Web3Context';
 
 const AgentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,9 +26,36 @@ const AgentDetail: React.FC = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [offerPrice, setOfferPrice] = useState<string>('');
   const [showOfferModal, setShowOfferModal] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [pendingAction, setPendingAction] = useState<'buy' | 'offer' | null>(null);
+  
+  const { isConnected, connectWallet } = useWeb3();
+  const navigate = useNavigate();
   
   // Find the agent from our data
   const agent = [...featuredAgents, ...trendingAgents].find(a => a.id === id);
+  
+  useEffect(() => {
+    if (agent) {
+      setLikeCount(agent.likes);
+    }
+  }, [agent]);
+
+  // Handle wallet connection success
+  useEffect(() => {
+    if (isConnected && pendingAction) {
+      if (pendingAction === 'buy') {
+        // Proceed with buy action
+        handleBuyNow();
+      } else if (pendingAction === 'offer') {
+        // Show offer modal
+        setShowOfferModal(true);
+      }
+      setPendingAction(null);
+      setShowWalletModal(false);
+    }
+  }, [isConnected, pendingAction]);
   
   if (!agent) {
     return (
@@ -49,7 +78,40 @@ const AgentDetail: React.FC = () => {
   const usdValue = parseFloat(agent.price) * ethPrice;
 
   const handleLikeToggle = () => {
+    if (isLiked) {
+      // Unlike: decrease count
+      setLikeCount(prev => Math.max(0, prev - 1));
+    } else {
+      // Like: increase count
+      setLikeCount(prev => prev + 1);
+    }
     setIsLiked(!isLiked);
+  };
+
+  const handleBuyNow = () => {
+    // Here you would handle the buy now action
+    alert(`Purchasing ${agent.name} for ${agent.price} ETH`);
+    // Navigate to checkout or process purchase
+  };
+
+  const handleActionClick = (action: 'buy' | 'offer') => {
+    if (!isConnected) {
+      // Set pending action and show wallet modal
+      setPendingAction(action);
+      setShowWalletModal(true);
+    } else {
+      // Already connected, proceed with action
+      if (action === 'buy') {
+        handleBuyNow();
+      } else {
+        setShowOfferModal(true);
+      }
+    }
+  };
+
+  const handleWalletConnect = async () => {
+    await connectWallet();
+    // The useEffect will handle the rest when isConnected changes
   };
 
   const handleOfferSubmit = (e: React.FormEvent) => {
@@ -125,14 +187,17 @@ const AgentDetail: React.FC = () => {
                   </div>
                   
                   <div className="flex space-x-3">
-                    <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300">
+                    <button 
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300"
+                      onClick={() => handleActionClick('buy')}
+                    >
                       <ShoppingCart className="h-5 w-5" />
                       <span>Buy Now</span>
                     </button>
                     
                     <button 
                       className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300"
-                      onClick={() => setShowOfferModal(true)}
+                      onClick={() => handleActionClick('offer')}
                     >
                       <DollarSign className="h-5 w-5" />
                       <span>Make Offer</span>
@@ -143,13 +208,13 @@ const AgentDetail: React.FC = () => {
                 {/* Like and Share buttons moved below the main buttons */}
                 <div className="flex items-center justify-end space-x-3 pt-3 border-t border-gray-700">
                   <div className="flex items-center space-x-1 mr-2">
-                    <span className="text-gray-300 text-sm">{agent.likes}</span>
+                    <span className="text-gray-300 text-sm">{likeCount}</span>
                     <button 
                       onClick={handleLikeToggle}
                       className="flex items-center"
                       aria-label={isLiked ? "Unlike" : "Like"}
                     >
-                      <Heart className={`h-5 w-5 text-white ${isLiked ? 'fill-current' : ''}`} />
+                      <Heart className={`h-5 w-5 text-white ${isLiked ? 'fill-current text-red-500' : ''}`} />
                     </button>
                   </div>
                   
@@ -440,6 +505,48 @@ const AgentDetail: React.FC = () => {
                 </button>
               </div>
             </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Wallet Connection Modal */}
+      {showWalletModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="text-center mb-6">
+              <div className="bg-blue-500/20 p-4 rounded-full inline-flex mb-4">
+                <Wallet className="h-8 w-8 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Connect Your Wallet</h3>
+              <p className="text-gray-300">
+                You need to connect your wallet to {pendingAction === 'buy' ? 'purchase' : 'make an offer for'} this agent.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <button
+                onClick={handleWalletConnect}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center space-x-2 transition"
+              >
+                <Wallet className="h-5 w-5" />
+                <span>Connect Wallet</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  setShowWalletModal(false);
+                  setPendingAction(null);
+                }}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition"
+              >
+                Cancel
+              </button>
+            </div>
           </motion.div>
         </div>
       )}
