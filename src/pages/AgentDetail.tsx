@@ -11,7 +11,8 @@ import {
   Tag, 
   Shield, 
   Users, 
-  MessageSquare 
+  MessageSquare,
+  DollarSign
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { featuredAgents, trendingAgents } from '../data/agents';
@@ -21,6 +22,8 @@ const AgentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState<'overview' | 'related'>('overview');
   const [isLiked, setIsLiked] = useState(false);
+  const [offerPrice, setOfferPrice] = useState<string>('');
+  const [showOfferModal, setShowOfferModal] = useState(false);
   
   // Find the agent from our data
   const agent = [...featuredAgents, ...trendingAgents].find(a => a.id === id);
@@ -47,6 +50,14 @@ const AgentDetail: React.FC = () => {
 
   const handleLikeToggle = () => {
     setIsLiked(!isLiked);
+  };
+
+  const handleOfferSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would handle the offer submission
+    alert(`Offer of ${offerPrice} ETH submitted for ${agent.name}`);
+    setShowOfferModal(false);
+    setOfferPrice('');
   };
 
   return (
@@ -119,11 +130,19 @@ const AgentDetail: React.FC = () => {
                   </button>
                   
                   <button 
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-6 rounded-lg flex items-center justify-center space-x-2 transition duration-300"
+                    onClick={() => setShowOfferModal(true)}
+                  >
+                    <DollarSign className="h-5 w-5" />
+                    <span>Make Offer</span>
+                  </button>
+                  
+                  <button 
                     className={`p-3 ${isLiked ? 'bg-rose-500' : 'bg-gray-700 hover:bg-gray-600'} rounded-lg transition`}
                     onClick={handleLikeToggle}
                     aria-label={isLiked ? "Unlike" : "Like"}
                   >
-                    <Heart className={`h-5 w-5 ${isLiked ? 'text-white fill-current' : 'text-gray-300'}`} />
+                    <Heart className={`h-5 w-5 text-white ${isLiked ? 'fill-current' : ''}`} />
                   </button>
                   
                   <button className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition">
@@ -132,18 +151,12 @@ const AgentDetail: React.FC = () => {
                 </div>
               </div>
               
-              {/* Agent Stats - Removed purchases, kept only likes and last updated */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
-                  <div className="text-gray-400 text-sm mb-1">Likes</div>
-                  <div className="text-xl font-bold flex items-center justify-center">
-                    <span>{agent.likes}</span>
-                    <Heart className={`h-4 w-4 text-rose-400 ml-1 ${isLiked ? 'fill-current' : ''}`} />
-                  </div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-4 text-center">
-                  <div className="text-gray-400 text-sm mb-1">Last Updated</div>
-                  <div className="text-xl font-bold">{new Date(agent.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+              {/* Agent Stats - Simplified to only show likes */}
+              <div className="bg-gray-800 rounded-lg p-4 text-center mb-6">
+                <div className="text-gray-400 text-sm mb-1">Likes</div>
+                <div className="text-xl font-bold flex items-center justify-center">
+                  <span>{agent.likes}</span>
+                  <Heart className={`h-4 w-4 text-white ml-1 ${isLiked ? 'fill-current' : ''}`} />
                 </div>
               </div>
             </div>
@@ -264,11 +277,6 @@ const AgentDetail: React.FC = () => {
                     </div>
                     
                     <div className="flex justify-between">
-                      <div className="text-gray-400">Last Updated</div>
-                      <div className="text-white font-medium">{agent.details?.lastUpdated || new Date(agent.updatedAt).toLocaleDateString()}</div>
-                    </div>
-                    
-                    <div className="flex justify-between">
                       <div className="text-gray-400">Category</div>
                       <div className="text-white font-medium">{agent.category}</div>
                     </div>
@@ -356,7 +364,7 @@ const AgentDetail: React.FC = () => {
                       <div className="p-5">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="text-lg font-semibold text-white">{relatedAgent.name}</h3>
-                          <div className="flex items-center space-x-1 text-rose-400">
+                          <div className="flex items-center space-x-1 text-white">
                             <Heart className="h-4 w-4 fill-current" />
                             <span className="text-sm">{relatedAgent.likes}</span>
                           </div>
@@ -376,6 +384,66 @@ const AgentDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Offer Modal */}
+      {showOfferModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="text-xl font-semibold mb-4">Make an Offer</h3>
+            <p className="text-gray-300 mb-6">Enter your offer price for {agent.name}</p>
+            
+            <form onSubmit={handleOfferSubmit}>
+              <div className="mb-6">
+                <label htmlFor="offerPrice" className="block text-sm font-medium text-gray-400 mb-2">
+                  Your Offer (ETH)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    id="offerPrice"
+                    value={offerPrice}
+                    onChange={(e) => setOfferPrice(e.target.value)}
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                    required
+                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <span className="text-gray-400">ETH</span>
+                  </div>
+                </div>
+                {offerPrice && (
+                  <p className="mt-2 text-sm text-gray-400">
+                    ≈ ${(parseFloat(offerPrice) * ethPrice).toFixed(2)} USD
+                  </p>
+                )}
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-lg transition"
+                >
+                  Submit Offer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowOfferModal(false)}
+                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
