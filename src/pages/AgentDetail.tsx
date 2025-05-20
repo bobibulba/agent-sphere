@@ -65,14 +65,14 @@ const AgentDetail: React.FC = () => {
         
         {/* Agent Overview Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
-          {/* Left side - Visual Preview */}
+          {/* Left side - Visual Preview - Made to fit the page better */}
           <motion.div 
             className="lg:col-span-1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="relative rounded-xl overflow-hidden aspect-video lg:aspect-square">
+            <div className="relative rounded-xl overflow-hidden aspect-square w-full">
               <img 
                 src={agent.image} 
                 alt={agent.name} 
@@ -85,18 +85,7 @@ const AgentDetail: React.FC = () => {
               </div>
             </div>
             
-            {/* Tags below image */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {agent.tags.map((tag, i) => (
-                <Link 
-                  key={i} 
-                  to={`/search?tag=${tag}`}
-                  className="bg-gray-800 text-gray-300 text-xs px-3 py-1.5 rounded-full hover:bg-gray-700 transition"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
+            {/* Removed hashtags below image */}
           </motion.div>
           
           {/* Right side - Quick Info */}

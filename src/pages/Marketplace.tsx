@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Heart, ArrowUpDown, X, ChevronUp, ChevronRight, Sparkles } from 'lucide-react';
+import { Search, Filter, ChevronDown, Heart, X, ChevronUp, Sparkles, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
@@ -395,13 +395,15 @@ const Marketplace: React.FC = () => {
                         
                         <p className="text-gray-400 text-sm mb-4 line-clamp-2">{agent.description}</p>
                         
+                        {/* Use cases instead of tags */}
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {agent.tags.slice(0, 3).map((tag, index) => (
+                          {agent.useCases && agent.useCases.slice(0, 2).map((useCase, index) => (
                             <span 
                               key={index} 
-                              className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full"
+                              className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full flex items-center"
                             >
-                              #{tag}
+                              <Check className="h-3 w-3 mr-1" />
+                              {useCase}
                             </span>
                           ))}
                         </div>
@@ -581,7 +583,6 @@ const ChevronLeft = ({ className }: { className?: string }) => (
     width="24" 
     height="24" 
     viewBox="0 0 24 24" 
-    fill="none" 
     fill="none" 
     stroke="currentColor" 
     strokeWidth="2" 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Bot, Zap, Shield, Sparkles } from 'lucide-react';
+import { ArrowRight, Bot, Zap, Shield, Sparkles, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -92,6 +92,8 @@ const Hero: React.FC = () => {
 // Featured Agent Carousel Component
 const FeaturedAgentCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [isLiked, setIsLiked] = React.useState(false);
+  
   const featuredAgents = [
     {
       id: "code-assist-pro",
@@ -100,6 +102,7 @@ const FeaturedAgentCarousel: React.FC = () => {
       description: "Advanced coding assistant with real-time pair programming capabilities. Helps with code completion, bug detection, and more.",
       image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
       price: "0.25 ETH",
+      likes: 342,
       tags: ["Code completion", "Bug detection", "Refactoring"]
     },
     {
@@ -109,6 +112,7 @@ const FeaturedAgentCarousel: React.FC = () => {
       description: "UI/UX design assistant that helps create beautiful interfaces with wireframing and color palette suggestions.",
       image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
       price: "0.35 ETH",
+      likes: 256,
       tags: ["Wireframing", "Color palette", "Components"]
     },
     {
@@ -118,6 +122,7 @@ const FeaturedAgentCarousel: React.FC = () => {
       description: "Data analysis and visualization assistant for business intelligence with powerful insights extraction.",
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
       price: "0.45 ETH",
+      likes: 189,
       tags: ["Data cleaning", "Analysis", "Visualization"]
     }
   ];
@@ -133,6 +138,10 @@ const FeaturedAgentCarousel: React.FC = () => {
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
+  };
+
+  const handleLikeToggle = () => {
+    setIsLiked(!isLiked);
   };
 
   const agent = featuredAgents[currentIndex];
@@ -196,13 +205,15 @@ const FeaturedAgentCarousel: React.FC = () => {
             </div>
             
             <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center space-x-1">
-                <span className="text-blue-400">★</span>
-                <span className="text-blue-400">★</span>
-                <span className="text-blue-400">★</span>
-                <span className="text-blue-400">★</span>
-                <span className="text-blue-400">★</span>
-                <span className="text-gray-300 text-sm ml-1">(342)</span>
+              <div className="flex items-center space-x-1 text-rose-400">
+                <button 
+                  onClick={handleLikeToggle}
+                  className="flex items-center space-x-1"
+                  aria-label={isLiked ? "Unlike" : "Like"}
+                >
+                  <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                  <span>{isLiked ? agent.likes + 1 : agent.likes}</span>
+                </button>
               </div>
               <div className="text-xl font-bold text-white">{agent.price}</div>
             </div>
