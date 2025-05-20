@@ -362,9 +362,9 @@ const Marketplace: React.FC = () => {
                     whileHover={{ y: -5 }}
                   >
                     <Link to={`/agent/${agent.id}`} className="block h-full flex flex-col">
-                      <div className="relative w-full">
+                      <div className="relative">
                         {/* Standardized image container with fixed aspect ratio */}
-                        <div className="w-full aspect-[4/3] overflow-hidden">
+                        <div className="w-full aspect-video overflow-hidden">
                           <img 
                             src={agent.image} 
                             alt={agent.name} 
@@ -373,45 +373,58 @@ const Marketplace: React.FC = () => {
                         </div>
                         
                         {/* Category tag */}
-                        <div className="absolute top-3 left-3">
-                          <span className="bg-blue-500/80 text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                        <div className="absolute top-2 right-2">
+                          <span className="bg-gray-900/80 text-white text-xs font-medium px-2.5 py-1 rounded-full">
                             {agent.category}
                           </span>
+                        </div>
+                        
+                        {/* Gradient overlay and title */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 p-4">
+                          <h3 className="text-lg font-bold text-white">{agent.name}</h3>
+                          <p className="text-gray-300 text-sm">by {agent.creator}</p>
                         </div>
                       </div>
                       
                       <div className="p-5 flex-grow flex flex-col">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-xl font-semibold">{agent.name}</h3>
-                          <button 
-                            onClick={(e) => handleLikeToggle(agent.id, e)}
-                            className="flex items-center space-x-1 text-rose-400 hover:text-rose-300 transition-colors"
-                            aria-label={likedAgents[agent.id] ? "Unlike" : "Like"}
-                          >
-                            <Heart className={`h-5 w-5 ${likedAgents[agent.id] ? 'fill-current' : ''} transition-all duration-300 hover:scale-110`} />
-                            <span>{likedAgents[agent.id] ? agent.likes + 1 : agent.likes}</span>
-                          </button>
-                        </div>
+                        <p className="text-gray-300 text-sm mb-4">{agent.description}</p>
                         
-                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">{agent.description}</p>
-                        
-                        {/* Use cases instead of tags */}
+                        {/* Capabilities */}
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {agent.useCases && agent.useCases.slice(0, 2).map((useCase, index) => (
-                            <span 
-                              key={index} 
-                              className="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full flex items-center"
-                            >
-                              <Check className="h-3 w-3 mr-1" />
-                              {useCase}
+                          {agent.capabilities.slice(0, 3).map((capability, i) => (
+                            <span key={i} className="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded-full">
+                              {capability}
                             </span>
                           ))}
+                          {agent.capabilities.length > 3 && (
+                            <span className="bg-gray-700 text-gray-300 text-xs px-2.5 py-1 rounded-full">
+                              +{agent.capabilities.length - 3} more
+                            </span>
+                          )}
                         </div>
                         
-                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-700">
-                          <span className="text-sm text-gray-400">By {agent.creator}</span>
-                          <span className="text-sm font-medium text-white">{agent.price} ETH</span>
+                        <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-700">
+                          <div className="flex items-center space-x-1 text-white">
+                            <button 
+                              onClick={(e) => handleLikeToggle(agent.id, e)}
+                              className="flex items-center space-x-1"
+                              aria-label={likedAgents[agent.id] ? "Unlike" : "Like"}
+                            >
+                              <Heart className={`h-5 w-5 ${likedAgents[agent.id] ? 'fill-current' : ''}`} />
+                              <span>{likedAgents[agent.id] ? agent.likes + 1 : agent.likes}</span>
+                            </button>
+                          </div>
+                          <span className="text-lg font-bold text-white">{agent.price} ETH</span>
                         </div>
+                        
+                        <Link 
+                          to={`/agent/${agent.id}`}
+                          className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-center transition"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View Details
+                        </Link>
                       </div>
                     </Link>
                   </motion.div>
