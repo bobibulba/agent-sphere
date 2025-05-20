@@ -396,20 +396,30 @@ const Marketplace: React.FC = () => {
                 {filteredAgents.map((agent) => (
                   <motion.div
                     key={agent.id}
-                    className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-primary-900/20"
+                    className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-lg hover:shadow-primary-900/20 flex flex-col h-full"
                     variants={itemVariants}
                     whileHover={{ y: -5 }}
                   >
-                    <Link to={`/agent/${agent.id}`} className="block">
-                      <div className="aspect-w-16 aspect-h-9 relative">
-                        <img 
-                          src={agent.image} 
-                          alt={agent.name} 
-                          className="object-cover w-full h-full"
-                        />
+                    <Link to={`/agent/${agent.id}`} className="block h-full flex flex-col">
+                      <div className="relative w-full">
+                        {/* Standardized image container with fixed aspect ratio */}
+                        <div className="w-full aspect-[4/3] overflow-hidden">
+                          <img 
+                            src={agent.image} 
+                            alt={agent.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        
+                        {/* Category tag */}
+                        <div className="absolute top-3 left-3">
+                          <span className="bg-blue-500/80 text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                            {agent.category}
+                          </span>
+                        </div>
                       </div>
                       
-                      <div className="p-5">
+                      <div className="p-5 flex-grow flex flex-col">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="text-xl font-semibold">{agent.name}</h3>
                           <button 
@@ -422,22 +432,22 @@ const Marketplace: React.FC = () => {
                           </button>
                         </div>
                         
-                        <p className="text-gray-400 text-sm mb-4">{agent.description}</p>
+                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">{agent.description}</p>
                         
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {agent.tags.map((tag, index) => (
+                          {agent.tags.slice(0, 3).map((tag, index) => (
                             <span 
                               key={index} 
                               className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full"
                             >
-                              {tag}
+                              #{tag}
                             </span>
                           ))}
                         </div>
                         
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-700">
                           <span className="text-sm text-gray-400">By {agent.creator}</span>
-                          <span className="text-sm font-medium text-white">${agent.price} ETH</span>
+                          <span className="text-sm font-medium text-white">{agent.price} ETH</span>
                         </div>
                       </div>
                     </Link>
