@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowRight, Bot, Zap, Shield, Sparkles, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { featuredAgents } from '../data/agents';
 
 const Hero: React.FC = () => {
   return (
@@ -94,47 +95,19 @@ const FeaturedAgentCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isLiked, setIsLiked] = React.useState(false);
   
-  const featuredAgents = [
-    {
-      id: "code-assist-pro",
-      name: "CodeAssist Pro",
-      creator: "ChatAndBuild Labs",
-      description: "Advanced coding assistant with real-time pair programming capabilities. Helps with code completion, bug detection, and more.",
-      image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      price: "0.25 ETH",
-      likes: 342,
-      tags: ["Code completion", "Bug detection", "Refactoring"]
-    },
-    {
-      id: "design-genius",
-      name: "DesignGenius",
-      creator: "PixelPerfect Studios",
-      description: "UI/UX design assistant that helps create beautiful interfaces with wireframing and color palette suggestions.",
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      price: "0.35 ETH",
-      likes: 256,
-      tags: ["Wireframing", "Color palette", "Components"]
-    },
-    {
-      id: "data-wizard",
-      name: "DataWizard",
-      creator: "AnalyticsPro",
-      description: "Data analysis and visualization assistant for business intelligence with powerful insights extraction.",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      price: "0.45 ETH",
-      likes: 189,
-      tags: ["Data cleaning", "Analysis", "Visualization"]
-    }
-  ];
+  // Get top 3 most liked agents
+  const topLikedAgents = [...featuredAgents]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, 3);
 
   // Auto-slide effect
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredAgents.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % topLikedAgents.length);
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [featuredAgents.length]);
+  }, [topLikedAgents.length]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -144,7 +117,7 @@ const FeaturedAgentCarousel: React.FC = () => {
     setIsLiked(!isLiked);
   };
 
-  const agent = featuredAgents[currentIndex];
+  const agent = topLikedAgents[currentIndex];
 
   return (
     <motion.div
@@ -159,10 +132,10 @@ const FeaturedAgentCarousel: React.FC = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-2">
               <Bot className="h-6 w-6 text-blue-400" />
-              <h3 className="text-xl font-semibold">Featured Agent</h3>
+              <h3 className="text-xl font-semibold">Featured Agents</h3>
             </div>
             <span className="bg-gray-700 text-blue-300 text-xs font-medium px-2.5 py-1 rounded-full">
-              Top Rated
+              Top Liked
             </span>
           </div>
           
@@ -197,15 +170,15 @@ const FeaturedAgentCarousel: React.FC = () => {
             </p>
             
             <div className="flex flex-wrap gap-2">
-              {agent.tags.map((tag, i) => (
+              {agent.capabilities.slice(0, 3).map((capability, i) => (
                 <span key={i} className="bg-gray-800 text-gray-300 text-xs px-2.5 py-1 rounded-full">
-                  {tag}
+                  {capability}
                 </span>
               ))}
             </div>
             
             <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center space-x-1 text-rose-400">
+              <div className="flex items-center space-x-1 text-white">
                 <button 
                   onClick={handleLikeToggle}
                   className="flex items-center space-x-1"
@@ -215,7 +188,7 @@ const FeaturedAgentCarousel: React.FC = () => {
                   <span>{isLiked ? agent.likes + 1 : agent.likes}</span>
                 </button>
               </div>
-              <div className="text-xl font-bold text-white">{agent.price}</div>
+              <div className="text-xl font-bold text-white">{agent.price} ETH</div>
             </div>
             
             <div className="flex space-x-3">
@@ -226,15 +199,11 @@ const FeaturedAgentCarousel: React.FC = () => {
                 View Details
               </Link>
             </div>
-            
-            <Link to="/marketplace" className="block text-center text-blue-400 hover:text-blue-300 text-sm mt-2">
-              Explore all featured agents
-            </Link>
           </motion.div>
           
           {/* Carousel navigation dots */}
           <div className="flex justify-center space-x-2 mt-4">
-            {featuredAgents.map((_, index) => (
+            {topLikedAgents.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
