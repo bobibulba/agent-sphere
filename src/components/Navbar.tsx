@@ -96,16 +96,18 @@ const Navbar: React.FC = () => {
                   Marketplace
                 </motion.div>
               </Link>
-              <Link to="/community" className="flex items-center text-gray-300 hover:text-white transition">
-                <motion.div
-                  className="flex items-center"
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Users className="h-4 w-4 mr-1" />
-                  <span>Community</span>
-                </motion.div>
-              </Link>
+              {isConnected && (
+                <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition">
+                  <motion.div
+                    className="flex items-center"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <LayoutDashboard className="h-4 w-4 mr-1" />
+                    <span>Dashboard</span>
+                  </motion.div>
+                </Link>
+              )}
             </div>
           </div>
           
@@ -245,10 +247,12 @@ const Navbar: React.FC = () => {
                 Marketplace
               </Link>
               
-              <Link to="/community" className="flex items-center text-gray-300 hover:text-white transition">
-                <Users className="h-4 w-4 mr-2" />
-                Community
-              </Link>
+              {isConnected && (
+                <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition">
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Link>
+              )}
               
               <div className="bg-gray-800 p-3 rounded-lg">
                 <DemoModeSwitch />
