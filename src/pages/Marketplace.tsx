@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, Heart, X, ChevronUp, Sparkles, Check } from 'lucide-react';
+import { Search, Filter, ChevronDown, Heart, X, ChevronUp, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Agent, SearchFilters, Category } from '../types';
 import { featuredAgents, trendingAgents, categories } from '../data/agents';
@@ -34,10 +34,12 @@ const Marketplace: React.FC = () => {
     
     // Filter by search query
     if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
       results = results.filter(agent => 
-        agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        agent.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        agent.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        agent.name.toLowerCase().includes(lowerQuery) ||
+        agent.description.toLowerCase().includes(lowerQuery) ||
+        agent.creator.toLowerCase().includes(lowerQuery) || // Added creator search
+        agent.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
       );
     }
     
@@ -191,7 +193,7 @@ const Marketplace: React.FC = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search for agents, capabilities, or use cases..."
+                  placeholder="Search for agents, creators, capabilities, or use cases..."
                   className="w-full py-4 px-6 pl-12 rounded-full bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 text-white"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -210,6 +212,7 @@ const Marketplace: React.FC = () => {
           <button 
             className="w-full flex items-center justify-center space-x-2 bg-gray-800 hover:bg-gray-700 px-4 py-3 rounded-lg text-white transition"
             onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+            type="button"
           >
             <Filter className="h-5 w-5" />
             <span>Filters</span>
@@ -232,6 +235,7 @@ const Marketplace: React.FC = () => {
                 <button 
                   onClick={() => setIsMobileFilterOpen(false)}
                   className="text-gray-400 hover:text-white"
+                  type="button"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -260,6 +264,7 @@ const Marketplace: React.FC = () => {
                   onClick={() => setIsFilterSidebarCollapsed(!isFilterSidebarCollapsed)}
                   className={`text-gray-400 hover:text-white flex items-center ${isFilterSidebarCollapsed ? 'mx-auto' : ''}`}
                   aria-label={isFilterSidebarCollapsed ? "Expand filters" : "Collapse filters"}
+                  type="button"
                 >
                   {isFilterSidebarCollapsed ? (
                     <Filter className="h-5 w-5" />
@@ -319,6 +324,7 @@ const Marketplace: React.FC = () => {
                     <button 
                       onClick={() => setSelectedCategory(null)}
                       className="text-gray-400 hover:text-white"
+                      type="button"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -331,6 +337,7 @@ const Marketplace: React.FC = () => {
                     <button 
                       onClick={() => toggleUseCase(useCase)}
                       className="text-gray-400 hover:text-white"
+                      type="button"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -340,6 +347,7 @@ const Marketplace: React.FC = () => {
                 <button 
                   onClick={resetFilters}
                   className="text-primary-400 hover:text-primary-300 text-sm"
+                  type="button"
                 >
                   Clear all filters
                 </button>
@@ -444,6 +452,7 @@ const Marketplace: React.FC = () => {
                 <button 
                   className="mt-4 px-4 py-2 bg-primary-500 hover:bg-primary-600 rounded-lg text-white transition"
                   onClick={resetFilters}
+                  type="button"
                 >
                   Reset Filters
                 </button>

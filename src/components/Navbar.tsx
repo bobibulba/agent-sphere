@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Bot, Menu, X, Search, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { Bot, Menu, X, ChevronDown, Sparkles, Users, ShoppingBag, LogIn, Github, Mail, Wallet, User, LayoutDashboard, LogOut, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWeb3 } from '../context/Web3Context';
 import DemoModeSwitch from './DemoModeSwitch';
@@ -110,16 +110,6 @@ const Navbar: React.FC = () => {
           </div>
           
           <div className="hidden md:flex items-center space-x-4">
-            {/* Always visible search bar */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search agent or creator..."
-                className="bg-gray-800 text-white rounded-full py-2 pl-10 pr-4 w-64 focus:outline-none focus:ring-2 focus:ring-primary-400"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
-            
             {/* Settings button */}
             <div className="relative" ref={settingsMenuRef}>
               <motion.button
@@ -259,15 +249,6 @@ const Navbar: React.FC = () => {
                 <Users className="h-4 w-4 mr-2" />
                 Community
               </Link>
-              
-              <div className="relative mt-2">
-                <input
-                  type="text"
-                  placeholder="Search agent or creator..."
-                  className="bg-gray-800 text-white rounded-full py-2 pl-10 pr-4 w-full focus:outline-none focus:ring-2 focus:ring-primary-400"
-                />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-              </div>
               
               <div className="bg-gray-800 p-3 rounded-lg">
                 <DemoModeSwitch />
