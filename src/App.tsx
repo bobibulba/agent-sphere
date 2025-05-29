@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Search from './pages/Search';
 import AgentDetail from './pages/AgentDetail';
 import Marketplace from './pages/Marketplace';
+import CreatorProfile from './pages/CreatorProfile';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/search" element={<Search />} />
                 <Route path="/agent/:id" element={<AgentDetail />} />
                 <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/creator/:creatorName" element={<CreatorProfile />} />
               </Routes>
             </main>
             <Footer />
