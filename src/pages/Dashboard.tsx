@@ -37,12 +37,22 @@ import {
   Save,
   X
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [copiedWallet, setCopiedWallet] = useState(false);
   const [showWalletFull, setShowWalletFull] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  
+  // Modal states
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showListModal, setShowListModal] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<any>(null);
+  const [transferAddress, setTransferAddress] = useState('');
+  const [listPrice, setListPrice] = useState('');
+  
+  const navigate = useNavigate();
 
   // Demo user data
   const [user, setUser] = useState({
@@ -70,8 +80,6 @@ const Dashboard: React.FC = () => {
       image: 'https://api.dicebear.com/7.x/bottts/svg?seed=agent1',
       category: 'Development',
       status: 'active',
-      usageCount: 156,
-      lastUsed: '2 hours ago',
       isListed: true
     },
     {
@@ -81,8 +89,6 @@ const Dashboard: React.FC = () => {
       image: 'https://api.dicebear.com/7.x/bottts/svg?seed=agent2',
       category: 'Data Science',
       status: 'active',
-      usageCount: 89,
-      lastUsed: '1 day ago',
       isListed: false
     },
     {
@@ -92,8 +98,6 @@ const Dashboard: React.FC = () => {
       image: 'https://api.dicebear.com/7.x/bottts/svg?seed=agent3',
       category: 'Content',
       status: 'inactive',
-      usageCount: 42,
-      lastUsed: '2 weeks ago',
       isListed: false
     }
   ];
@@ -193,6 +197,45 @@ const Dashboard: React.FC = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  // Agent action handlers
+  const handleTransferClick = (agent: any) => {
+    setSelectedAgent(agent);
+    setTransferAddress('');
+    setShowTransferModal(true);
+  };
+
+  const handleListClick = (agent: any) => {
+    setSelectedAgent(agent);
+    setListPrice('');
+    setShowListModal(true);
+  };
+
+  const handleViewClick = (agent: any) => {
+    navigate(`/agent/${agent.id}`);
+  };
+
+  const handleTransferSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!transferAddress.trim()) return;
+    
+    // Here you would handle the transfer logic
+    alert(`Agent "${selectedAgent.name}" transferred to ${transferAddress}`);
+    setShowTransferModal(false);
+    setTransferAddress('');
+    setSelectedAgent(null);
+  };
+
+  const handleListSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!listPrice.trim()) return;
+    
+    // Here you would handle the listing logic
+    alert(`Agent "${selectedAgent.name}" listed for ${listPrice} ETH`);
+    setShowListModal(false);
+    setListPrice('');
+    setSelectedAgent(null);
   };
 
   const tabVariants = {
@@ -648,16 +691,6 @@ const Dashboard: React.FC = () => {
                 
                 <div className="px-4 pb-4">
                   <p className="text-sm text-gray-300 mb-3 line-clamp-2">{agent.description}</p>
-                  <div className="flex justify-between text-xs text-gray-400">
-                    <span className="flex items-center">
-                      <Zap className="h-3 w-3 mr-1 text-primary-400" />
-                      {agent.usageCount} uses
-                    </span>
-                    <span className="flex items-center">
-                      <Clock className="h-3 w-3 mr-1 text-primary-400" />
-                      Last used {agent.lastUsed}
-                    </span>
-                  </div>
                 </div>
                 
                 <div className="border-t border-gray-700 p-3 bg-gray-850 flex justify-between">
@@ -671,6 +704,7 @@ const Dashboard: React.FC = () => {
                   </motion.button>
                   <div className="flex space-x-3">
                     <motion.button 
+                      onClick={() => handleTransferClick(agent)}
                       className="text-gray-400 text-sm flex items-center"
                       whileHover={{ scale: 1.05, color: '#fff' }}
                       whileTap={{ scale: 0.95 }}
@@ -680,6 +714,7 @@ const Dashboard: React.FC = () => {
                     </motion.button>
                     {!agent.isListed && (
                       <motion.button 
+                        onClick={() => handleListClick(agent)}
                         className="text-gray-400 text-sm flex items-center"
                         whileHover={{ scale: 1.05, color: '#fff' }}
                         whileTap={{ scale: 0.95 }}
@@ -690,6 +725,7 @@ const Dashboard: React.FC = () => {
                     )}
                     {agent.isListed && (
                       <motion.button 
+                        onClick={() => handleViewClick(agent)}
                         className="text-gray-400 text-sm flex items-center"
                         whileHover={{ scale: 1.05, color: '#fff' }}
                         whileTap={{ scale: 0.95 }}
@@ -1030,6 +1066,153 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </motion.div>
+      )}
+
+      {/* Transfer Modal */}
+      {showTransferModal && selectedAgent && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="text-xl font-semibold mb-4">Transfer Agent</h3>
+            <p className="text-gray-300 mb-6">
+              Transfer <span className="font-medium text-white">{selectedAgent.name}</span> to another wallet address.
+            </p>
+            
+            <form onSubmit={handleTransferSubmit}>
+              <div className="mb-6">
+                <label htmlFor="transferAddress" className="block text-sm font-medium text-gray-400 mb-2">
+                  Recipient Wallet Address
+                </label>
+                <input
+                  type="text"
+                  id="transferAddress"
+                  value={transferAddress}
+                  onChange={(e) => setTransferAddress(e.target.value)}
+                  placeholder="0x..."
+                  required
+                  className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono text-sm"
+                />
+              </div>
+              
+              <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-red-400 font-medium mb-1">Important Warning</h4>
+                    <p className="text-red-300 text-sm">
+                      Please double-check the recipient address. This action is <strong>irreversible</strong> and cannot be undone. 
+                      Make sure the address is correct before proceeding.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-3 px-4 rounded-lg transition flex items-center justify-center"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Transfer Agent
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowTransferModal(false);
+                    setSelectedAgent(null);
+                    setTransferAddress('');
+                  }}
+                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* List Modal */}
+      {showListModal && selectedAgent && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="text-xl font-semibold mb-4">List Agent for Sale</h3>
+            <p className="text-gray-300 mb-6">
+              Set a price for <span className="font-medium text-white">{selectedAgent.name}</span> to list it on the marketplace.
+            </p>
+            
+            <form onSubmit={handleListSubmit}>
+              <div className="mb-6">
+                <label htmlFor="listPrice" className="block text-sm font-medium text-gray-400 mb-2">
+                  Listing Price (ETH)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    id="listPrice"
+                    value={listPrice}
+                    onChange={(e) => setListPrice(e.target.value)}
+                    placeholder="0.00"
+                    step="0.01"
+                    min="0"
+                    required
+                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <span className="text-gray-400">ETH</span>
+                  </div>
+                </div>
+                {listPrice && (
+                  <p className="mt-2 text-sm text-gray-400">
+                    ≈ ${(parseFloat(listPrice) * 1800).toFixed(2)} USD
+                  </p>
+                )}
+              </div>
+              
+              <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <Tag className="h-5 w-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-blue-400 font-medium mb-1">Listing Information</h4>
+                    <p className="text-blue-300 text-sm">
+                      Your agent will be available for purchase on the marketplace. You can update or remove the listing at any time.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  type="submit"
+                  className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-medium py-3 px-4 rounded-lg transition flex items-center justify-center"
+                >
+                  <Tag className="h-4 w-4 mr-2" />
+                  List Agent
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowListModal(false);
+                    setSelectedAgent(null);
+                    setListPrice('');
+                  }}
+                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
       )}
     </div>
   );
