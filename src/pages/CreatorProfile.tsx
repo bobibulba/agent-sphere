@@ -67,7 +67,6 @@ const CreatorProfile: React.FC = () => {
     github: 'creator',
     email: 'creator@example.com',
     verified: true,
-    followers: 1247,
     following: 89
   };
   
@@ -146,7 +145,7 @@ const CreatorProfile: React.FC = () => {
               <p className="text-gray-300 mb-6 leading-relaxed">{creatorData.bio}</p>
               
               {/* Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              <div className="grid grid-cols-3 gap-6 mb-6">
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-bold text-white">{totalAgents}</div>
                   <div className="text-gray-400 text-sm">Agents</div>
@@ -154,10 +153,6 @@ const CreatorProfile: React.FC = () => {
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-bold text-white">{totalLikes.toLocaleString()}</div>
                   <div className="text-gray-400 text-sm">Total Likes</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold text-white">{creatorData.followers.toLocaleString()}</div>
-                  <div className="text-gray-400 text-sm">Followers</div>
                 </div>
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-bold text-white">{avgPrice.toFixed(2)} ETH</div>
