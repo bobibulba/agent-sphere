@@ -31,24 +31,35 @@ import {
   CreditCard,
   DollarSign,
   Bitcoin,
-  Coins
+  Coins,
+  Twitter,
+  Github,
+  Save,
+  X
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [copiedWallet, setCopiedWallet] = useState(false);
   const [showWalletFull, setShowWalletFull] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Demo user data
-  const user = {
+  const [user, setUser] = useState({
     name: 'Demo User',
     username: 'demouser',
     bio: 'AI enthusiast and developer exploring the potential of autonomous agents.',
     walletAddress: '0x1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t',
     email: 'user@example.com',
+    website: 'https://mywebsite.com',
+    twitter: '@demouser',
+    github: 'demouser',
     profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo&backgroundColor=b6e3f4',
     joinedDate: 'January 2023'
-  };
+  });
+
+  // Temporary state for editing
+  const [editData, setEditData] = useState(user);
 
   // Demo agents data
   const myAgents = [
@@ -158,6 +169,30 @@ const Dashboard: React.FC = () => {
   const truncateWalletAddress = (address: string) => {
     if (showWalletFull) return address;
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      // Cancel editing - reset to original data
+      setEditData(user);
+    } else {
+      // Start editing - copy current data to edit state
+      setEditData(user);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleSaveProfile = () => {
+    // Save the edited data
+    setUser(editData);
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setEditData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const tabVariants = {
@@ -302,24 +337,222 @@ const Dashboard: React.FC = () => {
             <div className="md:w-2/3 md:pl-8 border-t md:border-t-0 md:border-l border-gray-700 md:pl-8 pt-6 md:pt-0">
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-lg font-semibold">Profile Information</h3>
-                <motion.button 
-                  className="bg-primary-500 text-white px-4 py-2 rounded-lg flex items-center"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </motion.button>
+                <div className="flex space-x-2">
+                  {isEditing ? (
+                    <>
+                      <motion.button 
+                        onClick={handleSaveProfile}
+                        className="bg-primary-500 text-white px-4 py-2 rounded-lg flex items-center"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Changes
+                      </motion.button>
+                      <motion.button 
+                        onClick={handleEditToggle}
+                        className="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Cancel
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button 
+                      onClick={handleEditToggle}
+                      className="bg-primary-500 text-white px-4 py-2 rounded-lg flex items-center"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit Profile
+                    </motion.button>
+                  )}
+                </div>
               </div>
               
               <div className="space-y-4">
+                {/* Name */}
                 <div>
-                  <p className="text-gray-400 text-sm">Bio</p>
-                  <p className="text-white">{user.bio}</p>
+                  <p className="text-gray-400 text-sm mb-1">Name</p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      className="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                  ) : (
+                    <p className="text-white">{user.name}</p>
+                  )}
+                </div>
+
+                {/* Username */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Username</p>
+                  {isEditing ? (
+                    <div className="flex items-center bg-gray-900 border border-gray-600 rounded-lg px-3 py-2">
+                      <AtSign className="h-4 w-4 mr-2 text-gray-400" />
+                      <input
+                        type="text"
+                        value={editData.username}
+                        onChange={(e) => handleInputChange('username', e.target.value)}
+                        className="flex-1 bg-transparent text-white focus:outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center bg-gray-900 p-2 rounded-lg">
+                      <AtSign className="h-4 w-4 mr-2 text-primary-400" />
+                      <p className="text-white">{user.username}</p>
+                    </div>
+                  )}
                 </div>
                 
+                {/* Bio */}
                 <div>
-                  <p className="text-gray-400 text-sm">Wallet Address</p>
+                  <p className="text-gray-400 text-sm mb-1">Bio</p>
+                  {isEditing ? (
+                    <textarea
+                      value={editData.bio}
+                      onChange={(e) => handleInputChange('bio', e.target.value)}
+                      rows={3}
+                      className="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                    />
+                  ) : (
+                    <p className="text-white">{user.bio}</p>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Email</p>
+                  {isEditing ? (
+                    <div className="flex items-center bg-gray-900 border border-gray-600 rounded-lg px-3 py-2">
+                      <Mail className="h-4 w-4 mr-2 text-gray-400" />
+                      <input
+                        type="email"
+                        value={editData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="flex-1 bg-transparent text-white focus:outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center bg-gray-900 p-2 rounded-lg">
+                      <Mail className="h-4 w-4 mr-2 text-primary-400" />
+                      <p className="text-white">{user.email}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Website */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Website</p>
+                  {isEditing ? (
+                    <div className="flex items-center bg-gray-900 border border-gray-600 rounded-lg px-3 py-2">
+                      <Globe className="h-4 w-4 mr-2 text-gray-400" />
+                      <input
+                        type="url"
+                        value={editData.website}
+                        onChange={(e) => handleInputChange('website', e.target.value)}
+                        placeholder="https://yourwebsite.com"
+                        className="flex-1 bg-transparent text-white focus:outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center bg-gray-900 p-2 rounded-lg">
+                      <Globe className="h-4 w-4 mr-2 text-primary-400" />
+                      {user.website ? (
+                        <a 
+                          href={user.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary-400 hover:text-primary-300 flex items-center"
+                        >
+                          {user.website}
+                          <ExternalLink className="h-3 w-3 ml-1" />
+                        </a>
+                      ) : (
+                        <p className="text-gray-500">No website added</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Twitter */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Twitter</p>
+                  {isEditing ? (
+                    <div className="flex items-center bg-gray-900 border border-gray-600 rounded-lg px-3 py-2">
+                      <Twitter className="h-4 w-4 mr-2 text-gray-400" />
+                      <span className="text-gray-400 mr-1">@</span>
+                      <input
+                        type="text"
+                        value={editData.twitter.replace('@', '')}
+                        onChange={(e) => handleInputChange('twitter', '@' + e.target.value.replace('@', ''))}
+                        placeholder="username"
+                        className="flex-1 bg-transparent text-white focus:outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center bg-gray-900 p-2 rounded-lg">
+                      <Twitter className="h-4 w-4 mr-2 text-primary-400" />
+                      {user.twitter ? (
+                        <a 
+                          href={`https://twitter.com/${user.twitter.replace('@', '')}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary-400 hover:text-primary-300 flex items-center"
+                        >
+                          {user.twitter}
+                          <ExternalLink className="h-3 w-3 ml-1" />
+                        </a>
+                      ) : (
+                        <p className="text-gray-500">No Twitter added</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* GitHub */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">GitHub</p>
+                  {isEditing ? (
+                    <div className="flex items-center bg-gray-900 border border-gray-600 rounded-lg px-3 py-2">
+                      <Github className="h-4 w-4 mr-2 text-gray-400" />
+                      <span className="text-gray-400 mr-1">github.com/</span>
+                      <input
+                        type="text"
+                        value={editData.github}
+                        onChange={(e) => handleInputChange('github', e.target.value)}
+                        placeholder="username"
+                        className="flex-1 bg-transparent text-white focus:outline-none"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center bg-gray-900 p-2 rounded-lg">
+                      <Github className="h-4 w-4 mr-2 text-primary-400" />
+                      {user.github ? (
+                        <a 
+                          href={`https://github.com/${user.github}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary-400 hover:text-primary-300 flex items-center"
+                        >
+                          github.com/{user.github}
+                          <ExternalLink className="h-3 w-3 ml-1" />
+                        </a>
+                      ) : (
+                        <p className="text-gray-500">No GitHub added</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Wallet Address */}
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Wallet Address</p>
                   <div className="flex items-center bg-gray-900 p-2 rounded-lg">
                     <Wallet className="h-4 w-4 mr-2 text-primary-400" />
                     <p className="text-white font-mono text-sm flex-1 truncate">
@@ -339,14 +572,6 @@ const Dashboard: React.FC = () => {
                     >
                       {copiedWallet ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
                     </motion.button>
-                  </div>
-                </div>
-                
-                <div>
-                  <p className="text-gray-400 text-sm">Email</p>
-                  <div className="flex items-center bg-gray-900 p-2 rounded-lg">
-                    <Mail className="h-4 w-4 mr-2 text-primary-400" />
-                    <p className="text-white">{user.email}</p>
                   </div>
                 </div>
               </div>
